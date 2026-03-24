@@ -1,7 +1,7 @@
 # InformalProof
 ### Private Income Verification for the Invisible Economy
 
-> *Fhenix Privacy-by-Design Buildathon | Wave 1: Mar 21–28, 2026 | $5,000 USDC grant*
+> *Fhenix Privacy-by-Design Buildathon | Wave 1: Mar 21–28, 2026*
 
 ---
 
