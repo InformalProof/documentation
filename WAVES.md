@@ -1,433 +1,262 @@
-# PLANIFICATIONWAVES.md
-## InformalProof × ReinieraOS — Wave-by-Wave Build Plan
+# WAVES.md
+## InformalProof — Wave-by-Wave Build Plan
 
-> Detailed execution plan across all 5 waves. What gets built, when, by whom, and what the judges evaluate.
-
----
-
-## Program Timeline
-
-| Wave | Build Period | Evaluation | Grant |
-|---|---|---|---|
-| Wave 1 | Mar 21 – Mar 28 | Mar 28 – Mar 30 | $5,000 USDC |
-| Wave 2 | Mar 30 – Apr 6 | Apr 6 – Apr 8 | $5,000 USDC |
-| Wave 3 (Marathon) | Apr 8 – May 8 | May 8 – May 11 | $12,000 USDC |
-| Wave 4 | May 11 – May 20 | May 20 – May 23 | $14,000 USDC |
-| Wave 5 | May 23 – Jun 1 | Jun 1 – Jun 5 | $14,000 + $2,000 bonus |
+> Realistic deliverables per wave. No padding. If it's not built, it's not listed.
 
 ---
 
-## WAVE 1 — Foundation (Mar 21–28)
-### Goal: Prove the FHE mechanism works. Ship something deployable.
+## Deployment Strategy
 
-This wave is about demonstrating the core FHE primitive: encrypted income accumulation and threshold verification. Everything else is secondary.
+**Fhenix mainnet is not available until autumn 2026.**
 
----
+Our phased approach:
+1. **Waves 1–2:** Arbitrum Sepolia (testnet) — build and validate the FHE mechanism
+2. **Waves 3–4:** Public mainnet (Arbitrum One) — validate product-market fit with real users, no FHE in production yet
+3. **Wave 5 + beyond:** Fhenix mainnet when available — plug in privacy as a protocol-level feature with Fhenix support
 
-### What to build
-
-#### Day 1–2: Core Contract
-
-**`InformalProof.sol`**
-- `registerWorker()` — worker onboarding
-- `registerLender(address)` — lender whitelist (owner only)
-- `recordIncome(InEuint64)` — encrypt and accumulate income
-- `proveIncome(address, uint64)` — threshold comparison, returns `ebool`
-- `linkEscrow(bytes32, address, uint64)` — link escrow to worker
-- `resetMonthlyIncome()` — monthly reset with 30-day guard
-- Full ACL model: `FHE.allowThis` + `FHE.allow(worker)` + `FHE.allow(lender)`
-
-**`InformalProofGate.sol`**
-- Implements `IConditionResolver` from ReinieraOS
-- `isConditionMet(bytes32 escrowId)` → reads worker + threshold from InformalProof → calls `proveIncome()` → decrypts `ebool` → returns `bool`
-
-#### Day 3: Tests
-
-```
-test/
-├── InformalProof.test.ts
-│   ├── registerWorker — success + duplicate rejection
-│   ├── recordIncome — stores encrypted, ACL correct
-│   ├── recordIncome — accumulates multiple correctly
-│   ├── recordIncome — only registered worker can call
-│   ├── proveIncome — true when income >= threshold
-│   ├── proveIncome — false when income < threshold
-│   ├── proveIncome — only lender can call
-│   ├── proveIncome — ACL: lender + worker can see, public cannot
-│   ├── resetMonthlyIncome — works after 30 days
-│   └── resetMonthlyIncome — reverts before 30 days
-├── InformalProofGate.test.ts
-│   ├── isConditionMet — returns true when income qualifies
-│   ├── isConditionMet — returns false when income below threshold
-│   └── isConditionMet — reverts if escrow not linked
-└── integration/FullFlow.test.ts
-    ├── Worker registers → records 4 weeks income → lender proves → qualifies
-    └── Worker registers → records insufficient income → lender proves → fails
-```
-
-All tests use `hre.cofhe.mocks` for local execution — no testnet needed.
-
-#### Day 4: Deploy
-
-- Deploy `InformalProof.sol` to Arbitrum Sepolia
-- Deploy `InformalProofGate.sol` to Arbitrum Sepolia
-- Verify both contracts on Arbiscan
-- Register one test lender address
-- Run manual end-to-end: `registerWorker` → `recordIncome` × 4 → `proveIncome`
-- Confirm CoFHE events visible in block explorer
-
-#### Day 5–6: Frontend (React demo dApp)
-
-**Worker view:**
-- Connect wallet (WalletConnect / injected)
-- Register as worker
-- Simulate income from "RappiBank" — enter amount, encrypt, submit
-- View own income (decrypted locally via `decryptForView`)
-- Apply for credit — calls `proveIncome` via lender test account
-
-**Lender view:**
-- Register as lender (owner-controlled in Wave 1)
-- Input worker address + income threshold
-- Call `proveIncome` → see `ebool` result
-- See "qualifies ✅" or "does not qualify ❌"
-- Never sees the income amount at any step
-
-#### Day 7: Documentation
-
-Three required documents:
-1. `README.md` — what it is, why it exists, how to run it
-2. `ARCHITECTURE.md` — contracts, FHE operations, ACL model, data flows
-3. `FHE_EXPLAINER.md` — plain English: what is FHE, why it's needed here
+This means our go-to-market is not blocked by Fhenix mainnet timing. We validate the product first. Privacy becomes the upgrade.
 
 ---
 
-### Wave 1 Deliverables
+## WAVE 1 — Foundation
+### Mar 21–28 | Evaluation Mar 28–30 | $5,000 USDC
 
-| Deliverable | Status target |
-|---|---|
-| `InformalProof.sol` deployed on Arbitrum Sepolia | ✅ |
-| `InformalProofGate.sol` deployed on Arbitrum Sepolia | ✅ |
-| Contract verified on Arbiscan | ✅ |
-| All tests passing with CoFHE mocks | ✅ |
-| React frontend — worker flow | ✅ |
-| React frontend — lender verification flow | ✅ |
-| README + ARCHITECTURE + FHE_EXPLAINER | ✅ |
-| GitHub repo public with full docs | ✅ |
+**Goal:** Deploy working FHE contracts. Demo the core mechanic. Ship clean docs.
 
----
+### What gets built
 
-### Wave 1 Demo Script (3-minute version)
+**Contracts (Arbitrum Sepolia)**
+- `InformalProof.sol`
+  - `registerWorker()` + `registerLender()`
+  - `recordIncome(InEuint64)` — encrypt + accumulate
+  - `proveIncome(address, uint64)` → `ebool`
+  - `linkEscrow(bytes32, address, uint64)` — gate setup
+  - `resetMonthlyIncome()` — 30-day guard
+  - Full ACL: `allowThis` + `allow(worker)` + `allow(lender)`
+- `InformalProofGate.sol`
+  - Implements `IConditionResolver`
+  - `isConditionMet(escrowId)` → calls `proveIncome` → returns `bool`
+
+**Tests (Hardhat + CoFHE mocks)**
+- `registerWorker` — success + duplicate rejection
+- `recordIncome` — encrypts correctly, ACL set right
+- `recordIncome` — accumulates across multiple calls
+- `recordIncome` — only registered worker can call
+- `proveIncome` — true when income >= threshold
+- `proveIncome` — false when income < threshold
+- `proveIncome` — only lender can call
+- `proveIncome` — ACL: lender + worker can decrypt, public cannot
+- `resetMonthlyIncome` — works after 30 days, reverts before
+- Gate: `isConditionMet` — true / false / reverts if not linked
+- Integration: full worker → income × 4 → prove → result
+
+**Minimum: 12 passing tests.**
+
+**Frontend (React — deployed on Vercel)**
+- Worker view: register, simulate income entry, view own balance (decrypted locally)
+- Lender view: input worker address + threshold → see ebool result
+- Demo makes clear: lender sees only ✅ or ❌, never the number
+
+**Documentation**
+- `README.md` — pitch deck format (this file)
+- `PRODUCT.md` — personas, flows, differentiators
+- `ARCHITECTURE.md` — Mermaid diagrams + contracts
+- `WAVES.md` — this file
+
+### What does NOT get built in Wave 1
+- ❌ Privara integration (manual income entry only)
+- ❌ ReinieraOS escrow integration
+- ❌ AI advisor
+- ❌ ZeroDev accounts
+- ❌ ProtectionPool
+- ❌ Mobile UI
+
+### Demo script (3 minutes)
 
 ```
 0:00 — The problem
-"47 million informal workers in LATAM earn real income in stablecoins 
-but can't prove it to a lender without exposing everything."
+"Sebastián is a Rappi courier in Medellín.
+He earns $350/month in USDC. Addi rejected him — no payslip.
+He has income. The system can't see it without violating his privacy."
 
-0:30 — Worker registers and records income
-[Show: registerWorker() tx · recordIncome() × 4 txs · encrypted on-chain]
+0:40 — Worker records income
+[Show: recordIncome() × 4 txs on Arbitrum Sepolia]
+[Show: Arbiscan — euint64 ciphertext, no amount visible]
 
-1:00 — Worker sees own income
-[Show: decryptForView → income appears ONLY in the UI, not on-chain]
+1:10 — Worker sees own balance
+[Show: decryptForView → income appears in UI only]
+[Explain: this runs in browser RAM, never sent anywhere]
 
-1:30 — Lender requests proof
-[Show: proveIncome() call · ebool result · lender sees "qualifies ✅"]
+1:40 — Lender requests proof
+[Show: proveIncome() → ebool → "qualifies ✅"]
+[Show: lender UI has NO income number anywhere]
 
-2:00 — What the lender NEVER sees
-[Show: block explorer · euint64 ciphertext · no amount visible]
+2:20 — The key point
+"The lender answered their question without seeing the data.
+This cannot be built with ZK or any centralized system.
+Only FHE allows computation on encrypted state that changes over time."
 
-2:30 — Why FHE and not ZK or centralized
-[30 seconds on the comparison]
-
-3:00 — Roadmap
-"Wave 2: Privara integration + AI advisor + full escrow flow"
+2:50 — What's next
+"Wave 2: Privara income capture + ReinieraOS escrow + AI advisor.
+Colombia first. Nequi integration target by Q3."
 ```
 
 ---
 
-### Wave 1 Success Criteria
+## WAVE 2 — Integration
+### Mar 30 – Apr 6 | Evaluation Apr 6–8 | $5,000 USDC
 
-- [ ] Contracts deployed and verified on Arbitrum Sepolia
-- [ ] Full flow works on testnet: register → record → prove
-- [ ] Frontend shows worker income without leaking it to lender
-- [ ] Tests cover all core functions with mocks
-- [ ] README clearly explains why FHE is non-negotiable here
+**Goal:** Automate income capture. Add escrow flow. Ship AI advisor.
 
----
+### What gets built
 
-## WAVE 2 — AI + Privara + Escrow (Mar 30 – Apr 6)
-### Goal: Complete the user experience. Integrate ReinieraOS. Ship the AI advisor.
+**Privara income integration**
+- `@reineira-os/sdk` listener — auto-captures incoming payments
+- viem fallback — reads USDC Transfer events directly
+- Both sources tested end-to-end on Arbitrum Sepolia
 
----
+**ReinieraOS escrow integration (co-build with Reineira team)**
+- `ConfidentialEscrow` linked to `InformalProofGate`
+- Full loan creation flow: lender creates escrow → links worker → sets threshold
+- Silent failure confirmed: failed condition → transfers 0, does not revert
+- Basic ProtectionPool v1: stakers deposit → loan backed
 
-### What to build
+**AI financial advisor**
+- WebLLM loaded in browser (`Llama-3.2-3B-Instruct-q4f32_1-MLC`)
+- `decryptForView` → income in RAM → WebLLM inference
+- Loading progress bar (first load ~2GB, then cached)
+- 3 suggested prompts for workers who don't know what to ask
+- Confirmed: zero server calls during inference
 
-#### Privara / ReinieraOS Income Integration
-- Replace manual income entry with `@reineira-os/sdk` listener
-- `reineira.onPaymentReceived()` → automatically calls `recordIncome()`
-- Add viem fallback: read USDC Transfer events for workers not on Privara
-- Test both income sources end-to-end on Arbitrum Sepolia
+**UX**
+- Mobile-responsive layout
+- Spanish UI (primary market: Colombia)
+- ZeroDev social login beta (email / Google → smart account)
 
-#### ReinieraOS Escrow Integration
-- Deploy `ConfidentialEscrow` (ReinieraOS) and link to `InformalProofGate`
-- Full loan creation flow: lender creates escrow → links to worker → sets terms
-- `isConditionMet()` called by escrow → triggers `proveIncome()` → funds release
-- Silent failure pattern confirmed: failed condition → transfers 0, not reverts
-
-#### ProtectionPool First Integration
-- Co-design with ReinieraOS team
-- Basic pool setup: stakers deposit → borrower loan backed by coverage
-- FHE risk score calculation on encrypted income data
-- Premium calculation and collection
-
-#### AI Financial Advisor (WebLLM)
-- Integrate `@mlc-ai/web-llm` with `Llama-3.2-3B-Instruct-q4f32_1-MLC`
-- `decryptForView` → decrypted income → WebLLM inference → advice
-- Loading UX: model download progress bar
-- Suggested prompts for workers who don't know what to ask
-- Zero server calls confirmed — local inference only
-
-#### UX Improvements
-- Mobile-responsive design
-- Spanish and Portuguese UI (primary LATAM languages)
-- Income history chart (transaction count + trend — no amounts)
-- Loan status tracking for active loans
-- ZeroDev integration begins (social login for new users)
+### What does NOT get built in Wave 2
+- ❌ Multi-currency (USDC only)
+- ❌ Full ProtectionPool (v1 only — basic coverage)
+- ❌ npm SDK for fintechs
+- ❌ iOS app
 
 ---
 
-### Wave 2 Deliverables
+## WAVE 3 (Marathon) — Protocol
+### Apr 8 – May 8 | Evaluation May 8–11 | $12,000 USDC
 
-| Deliverable | Status target |
-|---|---|
-| Privara income auto-capture working | ✅ |
-| USDC on-chain fallback working | ✅ |
-| Full escrow loan flow on testnet | ✅ |
-| ProtectionPool v1 deployed | ✅ |
-| AI advisor working with local data | ✅ |
-| Mobile-responsive UI | ✅ |
-| Spanish/Portuguese language support | ✅ |
-| ZeroDev social login (beta) | ✅ |
+**Goal:** Make it integrable. First real fintech contact.
 
----
+### What gets built
 
-## WAVE 3 — Protocol + SDK Marathon (Apr 8 – May 8)
-### Goal: Make InformalProof integrable. Publish the SDK. Open to fintechs.
-
-This is the longest wave — 30 days — and the highest grant. Focus shifts from demo to protocol.
-
----
-
-### What to build
-
-#### @informalproof/sdk (npm package)
+**`@informalproof/sdk` — npm package**
 ```typescript
-// Target API for fintechs
 import { InformalProofClient } from '@informalproof/sdk'
 
-const client = new InformalProofClient({
-  network: 'arbitrum',
-  cofheConfig: { ... }
-})
-
-// Record income from any source
-await client.recordIncome({ amount: 500_000000n }) // 500 USDC
-
-// Prove income to a lender
-const result = await client.proveIncome({
-  worker: workerAddress,
-  threshold: 400_000000n
-})
-
-// Create loan application
-const loan = await client.applyForLoan({
-  amount: 300_000000n,
-  durationDays: 90,
-  lenderId: '0x...'
-})
+const client = new InformalProofClient({ network: 'arbitrum' })
+await client.recordIncome({ amount: 500_000000n })
+const result = await client.proveIncome({ worker, threshold: 400_000000n })
 ```
 
-#### Multi-Currency Support
-- USDC (Arbitrum)
-- USDT (Arbitrum)
-- BRLA (Polygon) — Brazilian Real
-- MXNe (Base) — Mexican Peso
-- Unified income accumulation across currencies with FHE.add()
+**Compliance layer**
+- AML threshold check: `FHE.lte(monthlyIncome, amlLimit)` → `ebool` for regulator
+- Regulator receives "within limits: yes/no" — no amounts
 
-#### Compliance Layer
-- AML threshold checks without revealing amounts
-- `FHE.lte(monthlyIncome, amlLimit)` → `ebool` for regulator
-- Regulators receive "within limits: yes/no" — no amounts
-- KYC integration hook for fintechs that require it
+**ProtectionPool v2**
+- `judge()` integration — default resolution without manual process
+- Open economy: other protocols can buy coverage from our pools
 
-#### Lender Dashboard
-- Portfolio view with aggregate statistics only
-- Per-loan status (active, repaid, defaulted) — no individual borrower data
-- Risk exposure by pool — encrypted totals only
-- Revenue tracking from premiums (stakers only)
+**Colombia pilot outreach**
+- Nequi developer program application
+- Rappi Colombia developer contact
+- Clear integration guide in Spanish
 
-#### ProtectionPool v2
-- Open economy: other protocols can buy coverage from InformalProof pools
-- Premium marketplace — best risk models attract most volume
-- Token incentives for early stakers
-- `judge()` integration fully tested for default resolution
-
-#### Platform Modules (ReinieraOS)
-- iOS app integration via ReineiraOS platform-modules
-- Web app with full ZeroDev onboarding
-- One-tap loan application for workers
-- Push notifications for income recording prompts
-
-#### Pilot Outreach
-- Bitso developer program application
-- Nequi partnership discussion
-- Documentation for fintech integration in Spanish/English
+**Public mainnet preparation**
+- Deploy to Arbitrum One (mainnet) — without FHE in production
+- Validate loan flow with real USDC
+- Collect real user feedback before Fhenix mainnet
 
 ---
 
-### Wave 3 Deliverables
+## WAVE 4 — Validation
+### May 11–20 | Evaluation May 20–23 | $14,000 USDC
 
-| Deliverable | Status target |
-|---|---|
-| `@informalproof/sdk` published on npm | ✅ |
-| Multi-currency support (USDC, USDT, BRLA, MXNe) | ✅ |
-| Compliance AML layer | ✅ |
-| Lender dashboard | ✅ |
-| ProtectionPool v2 with open economy | ✅ |
-| iOS app (platform-modules) | ✅ |
-| At least 1 fintech integration discussion started | ✅ |
-| Full test coverage including integration tests | ✅ |
+**Goal:** Real users. Real loans. Colombia only.
 
----
+### What gets built
 
-## WAVE 4 — Production Ready (May 11–20)
-### Goal: Mainnet deployment. Security audit. First real integration.
+**First real loans on public mainnet**
+- Small loans only: max $100 per borrower in pilot
+- Target: 100 loans via one fintech partner (Nequi or Rappi Colombia)
+- Real repayment tracking
+- Real ProtectionPool covering actual defaults
 
----
+**Security**
+- Audit of `InformalProof.sol` and `InformalProofGate.sol`
+- Multi-sig ownership on all contracts
+- Gas optimization report — Arbitrum mainnet differs from testnet
 
-### What to build
-
-#### Mainnet Deployment
-- Deploy `InformalProof.sol` to Arbitrum One (mainnet)
-- Deploy `InformalProofGate.sol` to Arbitrum One
-- Deploy `ConfidentialEscrow` and `ProtectionPool` to Arbitrum One
-- Multi-sig ownership for all contracts
-- Timelock on upgradeable components
-
-#### Security Audit
-- Audit of FHE operations and ACL model in `InformalProof.sol`
-- Audit of gate logic in `InformalProofGate.sol`
-- Audit of protection pool premium and payout logic
-- Gas optimization review — batch FHE operations where possible
-- Formal verification of ACL correctness
-
-#### First Real Fintech Integration
-- Target: one fintech partner embedding `@informalproof/sdk`
-- Integration support from both InformalProof and ReinieraOS teams
-- Co-marketing announcement
-
-#### Performance Optimization
-- Batch `recordIncome()` calls — multiple incomes in one transaction
-- Gas benchmarking on Arbitrum mainnet (different from testnet)
-- WebLLM model optimization — smaller model option for slower devices
+**Fhenix mainnet preparation**
+- Monitor Fhenix mainnet timeline (scheduled autumn 2026)
+- Prepare migration path: public mainnet → Fhenix mainnet
+- Co-design privacy plug-in with Fhenix team
 
 ---
 
-### Wave 4 Deliverables
+## WAVE 5 — Privacy Layer
+### May 23 – Jun 5 | Evaluation Jun 1–5 | $14,000 + $2,000 bonus
 
-| Deliverable | Status target |
-|---|---|
-| Mainnet deployment on Arbitrum One | ✅ |
-| Security audit completed | ✅ |
-| Multi-sig + timelock on contracts | ✅ |
-| First fintech integration (even in beta) | ✅ |
-| Gas optimization report | ✅ |
+**Goal:** Present at NY Tech Week. Prepare for Fhenix mainnet migration.
 
----
+### What gets built
 
-## WAVE 5 — Launch (May 23 – Jun 5)
-### Goal: Real users. Public launch. NY Tech Week presentation.
+**NY Tech Week presentation**
+- Live demo on public mainnet with real users
+- Full flow: income → proof → loan disbursed
+- Show Arbiscan: what the lender sees vs. what's actually on-chain
 
----
+**`@informalproof/sdk` v1.0**
+- Stable API, versioned
+- Integration guide in Spanish and English
+- Developer sandbox on testnet
 
-### What to build
+**Fhenix mainnet readiness**
+- Architecture ready for privacy plug-in when mainnet ships (autumn 2026)
+- Co-marketing plan with Fhenix team
+- VC introductions via ReinieraOS partnership (already committed)
 
-#### Public Beta Launch
-- Public launch of borrower-facing app
-- First 1,000 workers onboarded via fintech partner
-- Real loans: small amounts (max $100) for risk management
-- Real ProtectionPool covering actual loans
-
-#### NY Tech Week Presentation
-- Live demo with real transactions on Arbitrum mainnet
-- Borrower applies → income verified via FHE → loan disbursed via ReinieraOS
-- Full flow visible in real time on Arbiscan
-- No amounts visible on-chain — only ciphertexts
-
-#### @informalproof/sdk v1.0
-- Stable API, documented, versioned
-- Integration guides in Spanish, Portuguese, English
-- Developer portal with testnet sandbox
-- Changelog and migration guides
-
-#### Co-Marketing
-- Joint announcement with ReinieraOS/Privara
-- Fhenix ecosystem showcase
-- Case study published by ReinieraOS
-
-#### VC Introductions (via ReinieraOS partnership)
-- Pitch deck finalized (reineira-atlas assisted)
-- Warm introductions to aligned VCs
-- LATAM-focused investor conversations
+### What does NOT ship in Wave 5
+- ❌ Fhenix mainnet — not available until autumn 2026
+- ❌ Mexico or Brazil expansion — Colombia pilot must work first
+- ❌ Full open economy for protection pools — needs more validation
 
 ---
 
-### Wave 5 Deliverables
+## Honest Risks
 
-| Deliverable | Status target |
-|---|---|
-| Public beta with real users | ✅ |
-| Presentation at NY Tech Week | ✅ |
-| `@informalproof/sdk` v1.0 published | ✅ |
-| First 1,000 workers onboarded | ✅ |
-| Co-marketing announcement published | ✅ |
-| VC conversations initiated | ✅ |
-
----
-
-## Risk Register
-
-| Risk | Probability | Impact | Mitigation |
-|---|---|---|---|
-| CoFHE gas costs higher than expected | Medium | Wave 1 delay | Benchmark early, batch operations |
-| WebLLM too slow on mobile devices | Medium | Wave 2 UX issue | Smaller model fallback option |
-| ReinieraOS platform-modules delayed beyond Wave 2 | Low | Wave 2 UX delay | Build own minimal UI as fallback |
-| Fintech integration takes longer than Wave 3 | High | Go-to-market delay | Focus on demo with simulated fintech |
-| Security audit finds critical issues | Low | Wave 4 delay | Start audit early in Wave 3 |
-| Arbitrum mainnet gas different from testnet | Medium | Wave 4 optimization | Test gas on Arbitrum One testnet |
+| Risk | Likelihood | Mitigation |
+|---|---|---|
+| CoFHE gas costs too high for small loans | Medium | Batch FHE ops; test gas early Wave 1 |
+| WebLLM too slow on low-end Android devices | High | Smaller model option; server fallback for Wave 2 |
+| Fintech integration takes longer than Wave 3 | High | Focus on self-serve demo, not B2B in Wave 1–2 |
+| Fhenix mainnet delayed past autumn 2026 | Low | Public mainnet validates product anyway |
+| ProtectionPool insufficient liquidity for pilot | Medium | Start with small loan amounts only ($100 max) |
 
 ---
 
-## Team Responsibilities
+## Geographic Focus
 
-| Role | Responsibility |
-|---|---|
-| Smart Contract Dev | `InformalProof.sol`, `InformalProofGate.sol`, tests, deployment |
-| Frontend Dev | React app, CoFHE hooks, WebLLM integration |
-| ReinieraOS co-build | `ConfidentialEscrow`, `ProtectionPool`, `platform-modules` |
-| Product | Demo script, README, user flows, pitch |
+**Wave 1–2:** Testing only, no geography
+**Wave 3–4:** Colombia exclusively
+- Medellín + Bogotá — highest gig worker density
+- Nequi: 19M users, 60%+ informal workers
+- Rappi Colombia: 300K+ active couriers
+- LGPD-equivalent law (Habeas Data) creates compliance demand
 
----
+**Wave 5+:** Mexico if Colombia pilot shows traction
+- Mexico: $67B remittance corridor
+- Bitso: established stablecoin infrastructure
 
-## Tools and Workflow
-
-| Tool | Purpose |
-|---|---|
-| Hardhat + @cofhe/hardhat-plugin | Contract development and local testing |
-| Neo FHE AI Assistant | FHE contract code assistance |
-| reineira-code | Solidity plugin generation for ReinieraOS |
-| reineira-atlas | Strategy, compliance, investor readiness |
-| Arbiscan | Contract verification and transaction monitoring |
-| GitHub | Version control and public repo |
+**Not in 2026:** Brazil — market is large but requires Portuguese UI, different regulatory framework, and separate fintech relationships.
 
 ---
 
