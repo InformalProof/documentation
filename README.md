@@ -1,458 +1,274 @@
-# InformalProof
-### Private Income Verification for the Invisible Economy
+# CONTEXT.md
+## InformalProof × ReinieraOS — Why This Exists
 
-> *Fhenix Privacy-by-Design Buildathon | Wave 1: Mar 21–28, 2026*
+> Background, problem definition, users, market, and strategic context.
 
 ---
 
 ## The Problem
 
-**47 million informal workers in LATAM** — Rappi couriers, Uber drivers, freelancers — earn real, consistent income. Many receive it in stablecoins. But the financial system ignores them because they have no payslip.
+### The Informal Economy in LATAM
 
-Today, to access credit, they must expose everything: their clients, their income sources, their spending patterns. A privacy violation so severe that most prefer staying excluded over being exposed.
+Latin America has one of the largest informal economies in the world. According to the OECD, **47.3% of the workforce operates informally** — no official employment contract, no payslip, no record in the formal financial system.
 
-**The result: financial exclusion by lack of verifiable privacy.**
+These are not people who don't work. They are:
+- Rappi and iFood couriers in Brazil, Colombia, and Mexico
+- Uber and DiDi drivers across the region
+- Freelancers paid in USDC by international clients
+- Market vendors and micro-entrepreneurs
+- Remote workers paid in stablecoins
+
+They have **real, consistent, verifiable income**. Much of it is already on-chain in stablecoins. But the financial system cannot see them.
 
 ---
 
-## The Solution
+### The Credit Access Trap
+
+To access a loan, a credit card, or a rental contract, the standard mechanism is a payslip from a formal employer. Informal workers have none.
+
+The alternatives are:
+
+**Option A — Show everything**
+Share full bank statements, transaction history, client names, income sources. This exposes their entire financial life. Most workers refuse. Those who accept face risks of data leakage, surveillance, and targeted fraud.
+
+**Option B — Stay excluded**
+The majority choose this. They remain outside the formal credit system — paying higher prices, unable to smooth income shocks, locked out of opportunity.
+
+**This is not a technology problem. It is a privacy architecture problem.**
+
+The tools to verify income exist. The tools to do it without exposing the underlying data did not — until FHE.
+
+---
+
+### Why Stablecoin Adoption Makes This Urgent Now
+
+LATAM is the fastest-growing crypto region in the world:
+- **63% YoY growth** in crypto adoption (2024–2025)
+- **57.7 million** Latin Americans hold digital currencies
+- Stablecoins represent **90%+** of Brazil's crypto transactions
+- Local stablecoins emerging: BRL-pegged (+660% YoY), MXN-pegged (+1,100x YoY)
+- Trading volume spikes every salary date as workers convert to digital dollars
+
+A growing portion of informal worker income is now flowing **on-chain** through Privara, ReinieraOS, direct USDC transfers, and cross-border stablecoin remittances.
+
+This income is **publicly verifiable on the blockchain**. Anyone can confirm a wallet received $X in USDC last month. But proving it to a lender currently requires revealing the wallet — and with it, the entire transaction history.
+
+**The data is there. The privacy layer is missing.**
+
+---
+
+## The Core Insight
+
+> A worker can prove they earned $1,200 last month.
+> But proving it requires showing every client, every amount, every source.
+> So they don't prove it. And they don't get the loan.
+
+InformalProof solves this with one primitive:
 
 > **Prove how much you earn without showing how much you earn.**
 
-InformalProof is a privacy-first protocol that lets informal workers demonstrate solvency to lenders using Fully Homomorphic Encryption — without the lender, the fintech, or anyone else ever seeing a single real number.
+---
+
+## Why FHE and Not Something Else
+
+| Approach | Why it fails for this use case |
+|---|---|
+| Centralized (Nubank, Rappi) | They see all your data. Trust them forever. One breach = public data. |
+| ZK Proofs | Can prove "I earned > $X" once. Cannot maintain mutable encrypted history across weeks. |
+| Transparent blockchain | Income on-chain in plaintext is worse than telling a bank. |
+| TEEs | Require trusting hardware vendor. No cryptographic guarantee no one saw the data. |
+| **FHE (InformalProof)** | Income encrypted at rest, during computation, and in transit. Mathematical guarantee. |
+
+Privacy is not a feature. **It is the reason the product exists.**
 
 ---
 
-## How It Works
+## Why Verification Alone Is Not Enough — The ReinieraOS Insight
 
-The full workflow has three distinct layers working together: **income sourcing**, **FHE encryption**, and **credit verification**. The worker interacts only with the top layer — everything below is invisible.
+InformalProof answers one question: *"does this person qualify?"*
+
+What happens next — disbursement, repayment, defaults, lender protection — was undefined. That is the gap between a protocol primitive and a lending product.
+
+ReinieraOS closes that gap with:
+- **Programmable escrows** — funds release only when verification passes
+- **FHE-encrypted protection pools** — every loan backed by decentralized coverage
+- **Automated `judge()`** — defaults resolved by encrypted verdict, no manual process
+- **Open economy** — risk models become a marketplace earning premiums from other protocols
+
+Combined, InformalProof + ReinieraOS = a full P2P lending lifecycle where no participant ever sees sensitive data at any step.
 
 ---
 
-### Layer 1 — Income Sourcing (Where the data comes from)
+## Who Uses InformalProof
 
-InformalProof pulls verified income from two sources. Neither requires the worker to declare anything manually.
+### Primary User — The Informal Worker (Borrower)
 
-#### Source A — Privara / ReinieraOS (primary)
-The worker already receives stablecoin payments through Privara. InformalProof listens to those on-chain payment events automatically.
+**Profile:**
+- Age 20–45, urban LATAM
+- Receives income in USDC, USDT, or local stablecoins
+- Has a smartphone; may or may not have a Web3 wallet
+- Does NOT know what FHE is — does NOT need to
+- Wants access to credit, savings products, or financial guidance
 
-```
-Rappi / Uber / client pays worker
-            ↓
-Payment routed through Privara + ReinieraOS
-(stablecoin settlement on Arbitrum)
-            ↓
-On-chain Transfer event emitted
-            ↓
-InformalProof SDK detects the event
-(no API key, no intermediary, pure on-chain)
-            ↓
-Amount passed to FHE layer for encryption
-```
+**What they experience:**
+- Opens app (or existing fintech app with InformalProof integrated)
+- ZeroDev creates a smart account automatically — no seed phrase, no gas
+- Sees monthly income summary (decrypted locally, private)
+- Chats with AI advisor about their finances
+- Applies for credit with one tap
+- Never uploads documents, never exposes transaction history
 
-```typescript
-import { ReinieraClient } from '@reineira-os/sdk'
+**What they never know:**
+- That income is stored as `euint64` on Arbitrum
+- That threshold comparison ran on encrypted values
+- That FHE exists
 
-const reineira = new ReinieraClient({ network: 'arbitrum-sepolia' })
+---
 
-// Automatically triggered on every incoming payment
-reineira.onPaymentReceived(async (payment) => {
-  // Amount goes directly to FHE — never stored in plaintext
-  await informalProof.recordIncome(
-    await cofheClient.encrypt(payment.amount)
-  )
-})
-```
+### Secondary User — The Lender
 
-#### Source B — Direct on-chain USDC/stablecoin transfers (fallback)
-For workers not yet on Privara, InformalProof reads USDC/USDT Transfer events directly from the blockchain using public RPC — no API keys, no third-party access.
+**Profile:**
+- A fintech, neobank, microfinance institution, or individual P2P lender
+- Wants to extend credit to underserved users
+- Cannot currently underwrite informal workers due to lack of verifiable income data
+- Needs income verification without data liability
 
-```typescript
-import { createPublicClient, parseAbiItem } from 'viem'
+**What they experience:**
+- Browses loan marketplace
+- Sees terms, APR, coverage status — no borrower identity
+- Receives `ebool` result: qualifies or does not
+- Never stores, processes, or sees individual income figures
+- Protected by ProtectionPool if borrower defaults
 
-// Read all incoming stablecoin transfers for this worker
-const transfers = await publicClient.getLogs({
-  address: USDC_CONTRACT_ADDRESS,
-  event: parseAbiItem(
-    'event Transfer(address indexed from, address indexed to, uint256 value)'
-  ),
-  args: { to: workerAddress },
-  fromBlock: startOfMonth
-})
+---
 
-// Sum of verified on-chain transfers = provable income
-const totalIncome = transfers.reduce((sum, t) => sum + t.args.value, 0n)
-```
+### Tertiary User — The Fintech (B2B channel)
 
-**Supported income tokens:**
+**Profile:**
+- An existing fintech or payment app with LATAM user base
+- Wants to offer credit or financial advice without building FHE infrastructure
 
-| Token | Network | Real-world use |
+**What they get:**
+- `@informalproof/sdk` — npm package, 3 lines to integrate (Wave 3)
+- Embeddable React widget — AI chat + credit button
+- Zero backend required — all FHE on CoFHE + client
+- No data liability — they never touch income data
+
+---
+
+### Quaternary User — The Pool Staker
+
+**Profile:**
+- DeFi user seeking yield on stablecoin deposits
+- Deposits into Protection Pools backing loans
+- Earns premiums from every covered loan
+
+**What they experience:**
+- Deposits USDC/USDT into protection pool
+- Earns yield as premiums flow in
+- Pool balance encrypted — cannot see what others staked
+- First adopters receive token pool rewards
+
+---
+
+## Privacy Guarantee — Complete Matrix
+
+| Actor | Can see | Cannot see |
 |---|---|---|
-| USDC | Arbitrum Sepolia | Primary — most fintechs |
-| USDT | Arbitrum Sepolia | Alternative stablecoin |
-| BRLA | Polygon | Brazil — Real-pegged workers |
-| MXNe | Base | Mexico — Peso-pegged workers |
+| **Worker** | Own income (device RAM only) · AI advice · Loan status | Lender identity · Pool balance |
+| **Lender** | `ebool` result · Loan terms · Repayment status | Income amount · Income sources · Borrower identity |
+| **Protection Pool** | Risk score (encrypted) · Premium amount (encrypted) · Claim status | Real income · Borrower identity · Other pool balances |
+| **InformalProof protocol** | Zero plaintext | Everything sensitive |
+| **ReinieraOS** | Zero plaintext | Everything sensitive |
+| **On-chain observers** | `euint64` / `eaddress` / `ebool` ciphertexts | The actual values |
+| **AI Advisor** | Decrypted income in browser RAM during session | Nothing — session data cleared on close |
 
 ---
 
-### Layer 2 — FHE Encryption (Where privacy is enforced)
+## Market Context
 
-Once the income amount arrives from Layer 1, it **never exists in plaintext again**. The CoFHE SDK encrypts it client-side before it touches the contract.
+### LATAM Fintech Landscape
 
-```
-Income amount arrives from Privara event or on-chain read
-            ↓
-cofheClient.encrypt(amount) — encrypted in browser/device
-            ↓
-InEuint64 sent to InformalProof.sol
-            ↓
-FHE.asEuint64(inAmount) — stored as euint64 on-chain
-            ↓
-FHE.add(monthlyIncome[worker], newAmount) — accumulated
-            ↓
-FHE.allowThis(updatedIncome) — contract retains access
-FHE.allow(updatedIncome, worker) — worker can view own data
-            ↓
-euint64 on-chain — nobody can read this number
-```
+| Fintech | Country | Users | Relevance |
+|---|---|---|---|
+| Nubank | BR | 100M | Largest neobank outside Asia |
+| Nequi | CO | 19M | Majority informal workers |
+| RappiBank | CO, MX, BR | 3M+ couriers | Direct target demographic |
+| Bitso | MX | 8M+ | $4.3B in remittances (2023) |
+| Mercado Pago | Region | 50M+ | Payments + embedded credit |
 
-```solidity
-function recordIncome(InEuint64 calldata encAmount) external {
-    euint64 amount = FHE.asEuint64(encAmount);
-    monthlyIncome[msg.sender] = FHE.add(monthlyIncome[msg.sender], amount);
-    FHE.allowThis(monthlyIncome[msg.sender]);
-    FHE.allow(monthlyIncome[msg.sender], msg.sender);
-    txCount[msg.sender] = FHE.add(txCount[msg.sender], FHE.asEuint64(1));
-    FHE.allowThis(txCount[msg.sender]);
-}
-```
+### Regulatory Tailwind
 
----
+- **Brazil Drex** — CBDC pilot on Ethereum L2, creating on-chain financial infrastructure
+- **LGPD (Brazil)** / **Ley Habeas Data (Colombia)** — data protection laws making "see everything" models legally risky for fintechs
+- **MiCA expansion** — EU framework adopted by Mexico, Chile, Colombia
+- **Open Finance Brazil** — regulatory push for alternative credit data sources
 
-### Layer 3 — Credit Verification (What the lender sees)
+### The P2P Lending Gap
 
-When the worker applies for credit, the lender sends a threshold. The contract computes the comparison **entirely on encrypted values** — neither the income nor the threshold is revealed.
+Traditional P2P lending platforms fail at:
+- Data exposure — full borrower data visible to lender and platform
+- No lender protection on uncollateralized loans
+- Manual dispute resolution — slow and expensive
+- Centralized risk models — opaque, proprietary, single point of failure
 
-```
-Lender sets threshold: "I need $500/month minimum"
-            ↓
-proveIncome(workerAddress, 500_000000) called
-            ↓
-FHE.gte(monthlyIncome[worker], FHE.asEuint64(threshold))
-(comparison on two encrypted values — neither is revealed)
-            ↓
-ebool result: true or false
-            ↓
-FHE.allow(result, lender) — only lender can decrypt this
-            ↓
-Lender receives: "qualifies ✅" or "does not qualify ❌"
-```
-
-```solidity
-function proveIncome(
-    address worker,
-    uint64 threshold
-) external onlyLender returns (ebool) {
-    euint64 required = FHE.asEuint64(threshold);
-    ebool qualifies = FHE.gte(monthlyIncome[worker], required);
-    FHE.allow(qualifies, msg.sender); // lender sees result
-    FHE.allow(qualifies, worker);     // worker sees result
-    return qualifies;
-}
-```
+ReineiraOS changes every axis:
+- FHE-encrypted data — nobody sees raw financials
+- Protection pools — defaults covered automatically
+- Encrypted `judge()` — automated dispute resolution
+- Open risk economy — models verifiable on-chain and marketable
 
 ---
 
-### Complete End-to-End Flow
+## Competitive Landscape
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│  INCOME SOURCES                                             │
-│                                                             │
-│  Rappi/Uber  →  Privara/ReinieraOS  →  on-chain Transfer   │
-│  Direct USDC transfer              →  on-chain Transfer     │
-└──────────────────────────┬──────────────────────────────────┘
-                           │ payment event (plaintext, on-chain public)
-                           ↓
-┌─────────────────────────────────────────────────────────────┐
-│  CLIENT SIDE (worker's device only)                         │
-│                                                             │
-│  cofheClient.encrypt(amount) → InEuint64                   │
-│  Data never leaves device in plaintext                      │
-└──────────────────────────┬──────────────────────────────────┘
-                           │ encrypted input
-                           ↓
-┌─────────────────────────────────────────────────────────────┐
-│  INFORMALPROOF.SOL (Arbitrum Sepolia)                       │
-│                                                             │
-│  recordIncome() → FHE.add() → euint64 accumulated          │
-│  proveIncome()  → FHE.gte() → ebool result                 │
-│                                                             │
-│  ACL: worker sees own data │ lender sees only ebool         │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-              ┌────────────┴────────────┐
-              ↓                         ↓
-    ┌─────────────────┐       ┌─────────────────────┐
-    │  WORKER VIEW    │       │  LENDER VIEW         │
-    │                 │       │                      │
-    │ decryptForView  │       │  ebool only          │
-    │ → sees own $$$  │       │  "qualifies ✅"      │
-    │   in UI only    │       │  never sees amount   │
-    │                 │       │                      │
-    │ + AI Advisor    │       │  Credit approved     │
-    │   (local only)  │       │  via ReinieraOS      │
-    └─────────────────┘       └─────────────────────┘
-```
+### Within Fhenix Ecosystem (Wave 1 submissions reviewed)
 
----
+All 11 current submissions target crypto-native users: traders, developers, agent operators, creator economy. **None target informal workers. None are LATAM-specific.**
 
-**This is impossible with any other technology.**
+InformalProof is the only consumer-facing protocol with:
+- A defined underserved demographic (47M informal workers)
+- A geographic market focus (LATAM)
+- A complete lending lifecycle (not just verification)
+- An AI advisory layer on encrypted data
 
-| Approach | Why it fails |
-|---|---|
-| ZK Proofs | Only proves a point-in-time state — cannot maintain mutable encrypted history |
-| Centralized (Nubank, Rappi) | They see all your data — you trust them completely |
-| Transparent blockchain | Your income is public — defeats the entire purpose |
-| **FHE (InformalProof)** | Encrypted at rest, during computation, and always |
+### Against Traditional Credit
 
-Privacy is not a feature here. **It's the reason the product exists.**
-
----
-
-## The AI Layer
-
-Because the worker already has their data decrypted locally via `decryptForView` from the CoFHE SDK, they can pass it to an AI agent running **entirely on their device**.
-
-```
-On-chain: euint64 encrypted (nobody sees)
-    ↓ decryptForView — only in device RAM
-Device: plaintext only in local memory
-    ↓ passed to AI locally
-AI Agent: sees the data, gives advice
-    ↓ response to user
-Worker: receives personalized financial guidance
-```
-
-The worker can ask:
-- *"In how many months do I qualify for a $300 loan?"*
-- *"How much should I save this month?"*
-- *"Which credit option fits my history best?"*
-
-**Nobody sees that data. Not us, not the lender, not OpenAI. Ever.**
-
----
-
-## The Model — B2B2C
-
-The informal worker never downloads an InformalProof app. The fintech they already use integrates the protocol via SDK — 3 lines of code.
-
-```
-┌────────────────────────────────────────────┐
-│   FINTECH (Rappi, Bitso, Nequi, Nubank)    │
-│   App the user already has                 │
-│                 ↕  SDK  ↕                  │
-├────────────────────────────────────────────┤
-│         INFORMALPROOF PROTOCOL             │
-│                                            │
-│  FHE Engine  │  AI Advisor  │  Credit      │
-│  (encrypted  │  (local,     │  Bridge      │
-│   income)    │   private)   │  (ebool)     │
-├────────────────────────────────────────────┤
-│     BLOCKCHAIN — encrypted state           │
-└────────────────────────────────────────────┘
-```
-
-| Who | What they see |
-|---|---|
-| **Fintech** | A financial chat widget and a credit button |
-| **Worker** | Their income and an AI assistant |
-| **Lender** | Only "qualifies ✅ or ❌" |
-| **InformalProof** | Zero — no plaintext data, ever |
-
----
-
-## Ecosystem Integration
-
-### Fhenix CoFHE
-The encrypted compute layer. All FHE operations run here — `recordIncome`, `proveIncome`, ACL enforcement. No plaintext ever touches the contract.
-
-### Privara + ReinieraOS
-Primary income source. Workers receive stablecoin payments through Privara. InformalProof listens to those events automatically via `@reineira-os/sdk`. Credit disbursement returns through the same rails — same entry and exit point for funds.
-
-### viem + public RPC
-Fallback income source for workers not yet on Privara. Reads USDC/USDT Transfer events directly from Arbitrum Sepolia — no API keys, no intermediary, fully decentralized.
-
-### WebLLM
-AI financial advisor running entirely in the browser. Receives decrypted income data via `decryptForView` — data exists only in device RAM during the conversation. Zero server calls, zero data leakage.
-
----
-
-## Differentiation
-
-| | InformalProof | Nubank | Rappi Credit | Traditional Scoring |
+| | InformalProof | Nubank | Rappi Credit | Traditional Bank |
 |---|---|---|---|---|
-| Sees your income data | ❌ Never | ✅ Always | ✅ Always | ✅ Always |
+| Sees income data | ❌ Never | ✅ Always | ✅ Always | ✅ Always |
 | Works without payslip | ✅ | ❌ | Partial | ❌ |
 | Verifiable on-chain | ✅ | ❌ | ❌ | ❌ |
 | AI advice with privacy | ✅ | ❌ | ❌ | ❌ |
-| Can't be hacked/leaked | ✅ FHE | ❌ | ❌ | ❌ |
-| Built for LATAM informal workers | ✅ | Partial | Partial | ❌ |
-
-**No one in the Fhenix ecosystem is building for this user.** Every other Wave 1 submission targets crypto-native users — traders, developers, creators. InformalProof targets people who don't know what FHE is and don't need to.
+| Lender protection | ✅ Pool | ❌ | ❌ | Partial |
+| Unhackable income data | ✅ FHE | ❌ | ❌ | ❌ |
 
 ---
 
-## Market
+## Buildathon Context
 
-### Total Addressable Market
-- **47M** informal workers in LATAM with smartphone access
-- **$300B+** informal economy in LATAM annually
-- **$150B/year** in remittances — same users, same wallets
+**Event:** Fhenix Privacy-by-Design dApp Buildathon
+**Stack:** CoFHE on Sepolia · Arbitrum Sepolia · Base Sepolia
 
-### Immediate Target Fintechs
+### Why InformalProof qualifies on every criterion
 
-| Fintech | Country | Opportunity |
-|---|---|---|
-| RappiBank | CO, MX, BR | 3M+ couriers without access to credit |
-| Bitso | MX | $4.3B in remittances, users without credit history |
-| Nequi | CO | 19M users, majority informal |
-| Nubank | BR | 100M customers, seeking alternative data |
+| Criterion | Evidence |
+|---|---|
+| Privacy Architecture | FHE is non-negotiable — product cannot exist without it |
+| Innovation & Originality | Zero FHE projects address informal worker credit globally |
+| User Experience | Consumer-facing — worker never touches FHE directly |
+| Technical Execution | CoFHE + `@cofhe/sdk` + Privara + ACL + Gate pattern |
+| Market Potential | 47M users via B2B2C fintech distribution + B2C direct |
 
-### Why Now
-- Stablecoin adoption in LATAM grew **63% YoY** (2024–2025)
-- **57.7M** Latin Americans already hold digital currencies
-- Brazil's Drex CBDC pilot creates regulatory tailwind
-- MiCA framework expanding to Mexico, Chile, Colombia
-- On-chain stablecoins: BRL-pegged +660% YoY, MXN-pegged +1,100x YoY
+### Strategic Partnership
 
----
-
-## Roadmap
-
-### Wave 1 — Foundation (Mar 21–28)
-**Goal:** Prove the FHE mechanism works
-
-- [ ] `InformalProof.sol` — core contract
-  - `recordIncome(InEuint64)` — encrypt and accumulate
-  - `proveIncome(address, uint64 threshold)` → `ebool`
-  - ACL: worker sees own data, lender sees only result
-- [ ] Hardhat tests with mock contracts
-- [ ] Deploy on Arbitrum Sepolia
-- [ ] Basic React frontend — worker flow + lender flow
-- [ ] README + ARCHITECTURE + FHE_EXPLAINER docs
-
-**Demo:** Simulated Rappi courier applies for credit. Lender sees "qualifies ✅". Nobody sees the income number.
+ReinieraOS co-build agreement includes:
+- Co-design and co-write of Solidity contracts
+- Hands-on support through first live escrows and protection pools
+- reineira-atlas AI agents for strategy, growth, compliance, tokenomics (live now)
+- platform-modules iOS/Web + ZeroDev (ships Wave 2)
+- VC introductions and co-marketing
 
 ---
 
-### Wave 2 — AI + Privara (Mar 30 – Apr 6)
-**Goal:** Complete the user experience
-
-- [ ] Integrate `@reineira-os/sdk` for automatic income capture
-- [ ] AI financial advisor — WebLLM running in browser
-  - Uses `decryptForView` data — never leaves device
-  - Personalized credit guidance based on encrypted history
-- [ ] Mobile-responsive UI — Spanish/Portuguese
-- [ ] Income history visualization (encrypted, only worker sees)
-
----
-
-### Wave 3 — Protocol + SDK (Apr 8 – May 8)
-**Goal:** Make it integrable
-
-- [ ] Publish `@informalproof/sdk` — npm package for fintechs
-- [ ] Multi-currency support: USDC, USDT, BRLA, MXNe
-- [ ] Compliance layer: AML threshold checks without revealing amounts
-- [ ] Lender dashboard — aggregate data only, zero individual exposure
-- [ ] Pilot outreach: Bitso, Nequi developer programs
-
----
-
-### Wave 4 — Scale (May 11–20)
-**Goal:** Production-ready
-
-- [ ] Mainnet deployment (Arbitrum + Base)
-- [ ] Fintech integration documentation
-- [ ] Security audit
-- [ ] First fintech pilot integration
-
----
-
-### Wave 5 — Launch (May 23 – Jun 5)
-**Goal:** Real users
-
-- [ ] Public beta with first fintech partner
-- [ ] Presentation at NY Tech Week
-- [ ] Launch `@informalproof/sdk` v1.0
-- [ ] First 1,000 workers onboarded via fintech
-
----
-
-## Why We Win This Buildathon
-
-### Privacy Architecture ✅
-FHE is not a feature — without it the product cannot exist. You cannot prove income without revealing it using any other technology.
-
-### Innovation & Originality ✅
-Zero projects in the entire FHE ecosystem (Fhenix, Zama, Inco, Aleo) address informal worker credit access. Confirmed after exhaustive research across GitHub, ETHGlobal, and all known ecosystem projects.
-
-### User Experience ✅
-Consumer-facing demo with a real user story. Worker applies for credit in under 2 minutes. Privacy is completely invisible to them — they never interact with FHE directly.
-
-### Technical Execution ✅
-CoFHE stack correctly implemented using the new `@cofhe/sdk` (not deprecated cofhejs). ACL model with three roles: worker, lender, protocol. Deployed on Arbitrum Sepolia.
-
-### Market Potential ✅
-47M users. B2B2C model scales through fintechs that already have distribution. Not dependent on individual downloads.
-
----
-
-## Tech Stack
-
-```
-Smart Contracts:  Solidity + @fhenixprotocol/cofhe-contracts
-Client SDK:       @cofhe/sdk (new — not deprecated cofhejs)
-Payment Rails:    @reineira-os/sdk (Privara ecosystem)
-On-chain Data:    viem — reads USDC Transfer events directly
-Frontend:         React + @cofhe/react hooks
-AI Advisor:       WebLLM (browser-local inference, zero data leakage)
-Testing:          Hardhat + cofhe-hardhat-plugin (mock contracts)
-Network:          Arbitrum Sepolia → Arbitrum Mainnet
-```
-
----
-
-## Contract Architecture
-
-```
-InformalProof.sol
-│
-├── State
-│   ├── mapping(address → euint64) private monthlyIncome
-│   ├── mapping(address → euint64) private txCount
-│   └── mapping(address → bool) public registeredLenders
-│
-├── Worker functions
-│   ├── recordIncome(InEuint64 calldata amount)
-│   └── resetMonthlyIncome()
-│
-├── Lender functions
-│   └── proveIncome(address worker, uint64 threshold) → ebool
-│
-└── ACL model
-    ├── FHE.allowThis(handle)        — contract reuses value
-    ├── FHE.allow(handle, worker)    — worker sees own income
-    ├── FHE.allow(result, lender)    — lender sees only ebool
-    └── FHE.allowSender(handle)      — immediate feedback
-```
-
----
-
-## One Line
-
-> *InformalProof is the protocol that enables 47 million informal workers in LATAM to access credit and personalized financial advice — without revealing their data to anyone, ever.*
-
----
-
-*Built on Fhenix CoFHE | Powered by Privara + ReinieraOS | Wave 1 Submission*
+*InformalProof | Built on Fhenix CoFHE | Powered by Privara + ReinieraOS*
