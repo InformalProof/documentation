@@ -1,6 +1,6 @@
 # Lendi Branding and Identity
 
-
+![Lendi logo](./images/Lendi-logo.png)
 
 ## Overview
 
