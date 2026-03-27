@@ -1,7 +1,6 @@
-# WAVES.md
-## InformalProof — Wave-by-Wave Build Plan
+# Lendi Wave-by-Wave Build Plan
 
-> Realistic deliverables per wave. No padding. If it's not built, it's not listed.
+> Realistic deliverables per wave. No padding. If it is not built, it is not listed.
 
 ---
 
@@ -26,14 +25,14 @@ This means our go-to-market is not blocked by Fhenix mainnet timing. We validate
 ### What gets built
 
 **Contracts (Arbitrum Sepolia)**
-- `InformalProof.sol`
+- `Lendi.sol`
   - `registerWorker()` + `registerLender()`
   - `recordIncome(InEuint64)` — encrypt + accumulate
   - `proveIncome(address, uint64)` → `ebool`
   - `linkEscrow(bytes32, address, uint64)` — gate setup
   - `resetMonthlyIncome()` — 30-day guard
   - Full ACL: `allowThis` + `allow(worker)` + `allow(lender)`
-- `InformalProofGate.sol`
+- `LendiGate.sol`
   - Implements `IConditionResolver`
   - `isConditionMet(escrowId)` → calls `proveIncome` → returns `bool`
 
@@ -116,7 +115,7 @@ Colombia first. Nequi integration target by Q3."
 - Both sources tested end-to-end on Arbitrum Sepolia
 
 **ReinieraOS escrow integration (co-build with Reineira team)**
-- `ConfidentialEscrow` linked to `InformalProofGate`
+- `ConfidentialEscrow` linked to `LendiGate`
 - Full loan creation flow: lender creates escrow → links worker → sets threshold
 - Silent failure confirmed: failed condition → transfers 0, does not revert
 - Basic ProtectionPool v1: stakers deposit → loan backed
@@ -150,9 +149,9 @@ Colombia first. Nequi integration target by Q3."
 
 **`@informalproof/sdk` — npm package**
 ```typescript
-import { InformalProofClient } from '@informalproof/sdk'
+import { LendiClient } from '@lendi/sdk'
 
-const client = new InformalProofClient({ network: 'arbitrum' })
+const client = new LendiClient({ network: 'arbitrum' })
 await client.recordIncome({ amount: 500_000000n })
 const result = await client.proveIncome({ worker, threshold: 400_000000n })
 ```
@@ -191,7 +190,7 @@ const result = await client.proveIncome({ worker, threshold: 400_000000n })
 - Real ProtectionPool covering actual defaults
 
 **Security**
-- Audit of `InformalProof.sol` and `InformalProofGate.sol`
+- Audit of `Lendi.sol` and `LendiGate.sol`
 - Multi-sig ownership on all contracts
 - Gas optimization report — Arbitrum mainnet differs from testnet
 
@@ -260,4 +259,4 @@ const result = await client.proveIncome({ worker, threshold: 400_000000n })
 
 ---
 
-*InformalProof | Built on Fhenix CoFHE | Powered by Privara + ReinieraOS*
+*Lendi | Built on Fhenix CoFHE | Powered by Privara + ReinieraOS*

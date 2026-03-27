@@ -1,11 +1,11 @@
-# InformalProof
+# Lendi
 ### Prove what you earn. Reveal nothing.
 
 ---
 
 ## What We Do
 
-InformalProof lets informal workers prove their income to lenders using Fully Homomorphic Encryption — without revealing the actual number. The lender receives a yes/no answer. The worker keeps full privacy. Every loan is insured via an encrypted protection pool — the only system in LATAM that protects lenders without exposing borrower data.
+Lendi lets informal workers prove their income to lenders using Fully Homomorphic Encryption — without revealing the actual number. The lender receives a yes/no answer. The worker keeps full privacy. Every loan is insured via an encrypted protection pool — the only system in LATAM that protects lenders without exposing borrower data.
 
 ---
 
@@ -38,12 +38,12 @@ Workers can chat with an AI advisor that sees their decrypted income — but onl
 
 ---
 
-## Why Now. Why Us.
+## Why Now, Why Us
 
-**Why now:**
+**Why now**
 FHE on EVM became production-ready in 2025. Fhenix CoFHE is live on Arbitrum Sepolia. The window for first-mover advantage is open — and it closes as protocols ossify.
 
-**Why us:**
+**Why us**
 - We are building from Colombia — one of the top informal economies in LATAM, with 19M+ digital wallet users (Nequi alone)
 - We have a co-build agreement with ReinieraOS (Privara ecosystem) for payment rails, escrow infrastructure, and VC introductions
 - We are one of two teams in this buildathon addressing consumer use cases outside of DeFi/trading
@@ -66,7 +66,7 @@ The $2M SOM assumes: one fintech integration (Nequi or Rappi), average loan of $
 
 | | Privacy | Works without payslip | On-chain | Lender protection |
 |---|---|---|---|---|
-| **InformalProof** | ✅ FHE | ✅ | ✅ | ✅ via pool |
+| **Lendi** | ✅ FHE | ✅ | ✅ | ✅ via pool |
 | **Kueski (MX)** | ❌ | ✅ | ❌ | ❌ |
 | **Addi (CO)** | ❌ | Partial | ❌ | ❌ |
 | **Juancho te Presta (CO)** | ❌ | ✅ | ❌ | ❌ |
@@ -89,7 +89,7 @@ The $2M SOM assumes: one fintech integration (Nequi or Rappi), average loan of $
 | **Q3 2026** | Plug in Fhenix privacy layer | Protocol-level privacy on public chain |
 | **Q4 2026** | Mainnet (Fhenix, scheduled autumn 2026) | First 1,000 loans |
 
-**Note:** Fhenix mainnet is not available until autumn 2026. We start on public chain to validate product-market fit, then plug in privacy at the protocol level with Fhenix support.
+**Note:** Fhenix mainnet is not available until autumn 2026. We start on a public chain to validate product-market fit, then plug in privacy at the protocol level with Fhenix support.
 
 ---
 

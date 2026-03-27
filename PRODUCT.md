@@ -1,11 +1,10 @@
-# PRODUCT.md
-## InformalProof — Product Overview
+# Lendi Product Overview
 
 ---
 
 ## User Personas
 
-### Persona 1 — The Worker (Borrower)
+### Persona 1 - The Worker (Borrower)
 
 **Name:** Sebastián, 28, Medellín
 **Job:** Rappi courier, 4 days/week
@@ -17,7 +16,7 @@
 
 ---
 
-### Persona 2 — The Lender
+### Persona 2 - The Lender
 
 **Name:** Fintech credit team at a neobank
 **Problem:** They want to expand credit to informal workers but have no reliable income signal. They also have data liability concerns — storing worker financial data creates LGPD / Habeas Data compliance risk.
@@ -26,7 +25,7 @@
 
 ---
 
-### Persona 3 — The Integration Partner (Fintech)
+### Persona 3 - The Integration Partner (Fintech)
 
 **Name:** Product lead at Nequi Colombia
 **Problem:** Has 19M users, most informal. Wants to offer credit without building FHE infrastructure.
@@ -39,9 +38,9 @@
 ### Flow 1 — Worker Registers and Builds Income History
 
 ```
-Worker opens app (or fintech app with InformalProof)
+Worker opens app (or fintech app with Lendi)
 → Social login via ZeroDev (no seed phrase, no gas)
-→ registerWorker() on InformalProof.sol
+→ registerWorker() on Lendi.sol
 → Privara SDK listens for incoming stablecoin payments
 → Each payment: encrypted client-side → recordIncome(InEuint64)
 → euint64 accumulates on Arbitrum — nobody reads it
@@ -64,7 +63,7 @@ Worker opens AI advisor tab
 
 ```
 Worker taps "Apply for loan — $200"
-→ InformalProofGate.isConditionMet(escrowId)
+→ LendiGate.isConditionMet(escrowId)
 → proveIncome(worker, threshold=200_000000)
 → FHE.gte(monthlyIncome, required) on ciphertexts
 → ebool result: qualifies ✅ or ❌
@@ -88,7 +87,7 @@ Lender deposits liquidity to fund loans
 → Lender NEVER sees: worker income, identity, risk score
 ```
 
-**This is the feature no competitor has.** Kueski, Addi, and Juancho expose all borrower data to calculate risk. ConfidentialCredit has privacy but no lender protection. InformalProof is the only platform that gives lenders coverage while keeping borrower data encrypted end-to-end.
+**This is the feature no competitor has.** Kueski, Addi, and Juancho expose all borrower data to calculate risk. ConfidentialCredit has privacy but no lender protection. Lendi is the only platform that gives lenders coverage while keeping borrower data encrypted end-to-end.
 
 ---
 
@@ -118,7 +117,7 @@ Lender deposits liquidity to fund loans
 - Premium calculation uses `FHE.mul()` and `FHE.div()` on encrypted risk scores — borrower data never exposed
 - Default claims are processed via encrypted `judge()` logic — automated payout with no manual review
 - Backed by staker deposits in a shared pool — distributed risk across all loans
-- This is what makes InformalProof defensible: privacy + lender coverage in one system
+- This is what makes Lendi defensible: privacy + lender coverage in one system
 
 ### 5. ReinieraOS Loan Lifecycle
 - Escrow holds funds until all conditions pass
@@ -138,7 +137,7 @@ Lender deposits liquidity to fund loans
 
 According to our competitor analysis, **lender protection is our only unique feature**. Every other platform — Kueski, Addi, Juancho te Presta, even ConfidentialCredit — either has no lender protection at all, or requires full visibility into borrower finances to calculate risk.
 
-InformalProof is the only system where:
+Lendi is the only system where:
 - **Lenders are insured against default via an encrypted ProtectionPool**
 - **Risk premiums are calculated using FHE** — no individual borrower data is ever decrypted
 - **Claims are paid automatically** when defaults occur — using encrypted `judge()` logic
@@ -148,7 +147,7 @@ This is our moat. Privacy alone is not enough — Bloom and ConfidentialCredit h
 
 ### Why this matters for go-to-market
 
-Fintechs care about two things: risk and compliance. InformalProof reduces both:
+Fintechs care about two things: risk and compliance. Lendi reduces both:
 - **Risk:** ProtectionPool coverage means the fintech is insured even if the borrower defaults
 - **Compliance:** Because we never hold plaintext income data, the fintech has no data liability under LGPD or Habeas Data laws
 
@@ -158,7 +157,7 @@ This is not a UX advantage. It is a structural privacy and risk guarantee enforc
 
 ZK proofs can verify a single statement ("I earned more than $X"). They cannot maintain a mutable encrypted history that updates with each new transaction. That is exactly what income verification requires — a running encrypted balance that grows week by week.
 
-Only FHE allows computation on encrypted state that changes over time. That is why InformalProof cannot be built with ZK, TEEs, or transparent blockchains.
+Only FHE allows computation on encrypted state that changes over time. That is why Lendi cannot be built with ZK, TEEs, or transparent blockchains.
 
 ---
 
@@ -177,4 +176,4 @@ Wave 1 is: contracts deployed, tests passing, demo working, docs complete.
 
 ---
 
-*InformalProof | Built on Fhenix CoFHE | Powered by Privara + ReinieraOS*
+*Lendi | Built on Fhenix CoFHE | Powered by Privara + ReinieraOS*

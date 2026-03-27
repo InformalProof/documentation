@@ -1,5 +1,4 @@
-# ARCHITECTURE.md
-## InformalProof — Technical Architecture
+# Lendi Technical Architecture
 
 ---
 
@@ -14,8 +13,8 @@ graph TB
     end
 
     subgraph PROTOCOL["Protocol Layer"]
-        IP[InformalProof.sol]
-        GATE[InformalProofGate.sol]
+        IP[Lendi.sol]
+        GATE[LendiGate.sol]
         ESCROW[ConfidentialEscrow - ReinieraOS]
         POOL[ProtectionPool - ReinieraOS]
     end
@@ -52,7 +51,7 @@ sequenceDiagram
     participant W as Worker Device
     participant P as Privara/ReinieraOS
     participant SDK as @cofhe/sdk
-    participant C as InformalProof.sol
+    participant C as Lendi.sol
     participant FHE as CoFHE Engine
 
     P->>W: Payment received event (plaintext on-chain)
@@ -73,8 +72,8 @@ sequenceDiagram
 ```mermaid
 sequenceDiagram
     participant L as Lender
-    participant GATE as InformalProofGate.sol
-    participant IP as InformalProof.sol
+    participant GATE as LendiGate.sol
+    participant IP as Lendi.sol
     participant FHE as CoFHE Engine
     participant ESC as ConfidentialEscrow
 
@@ -136,7 +135,7 @@ Nobody else can decrypt anything. Not the protocol. Not the public.
 
 ## Core Contracts
 
-### InformalProof.sol
+### Lendi.sol
 
 ```solidity
 // SPDX-License-Identifier: MIT
@@ -144,7 +143,7 @@ pragma solidity ^0.8.24;
 
 import {FHE, euint64, InEuint64, ebool} from "@fhenixprotocol/cofhe-contracts/FHE.sol";
 
-contract InformalProof {
+contract Lendi {
     mapping(address => euint64) private monthlyIncome;
     mapping(address => bool)    public  registeredWorkers;
     mapping(address => bool)    public  registeredLenders;
@@ -171,11 +170,11 @@ contract InformalProof {
 }
 ```
 
-### InformalProofGate.sol
+### LendiGate.sol
 
 ```solidity
 // Plugs into ReinieraOS as IConditionResolver
-contract InformalProofGate is IConditionResolver {
+contract LendiGate is IConditionResolver {
     function isConditionMet(bytes32 escrowId) external returns (bool) {
         address worker    = informalProof.escrowToWorker(escrowId);
         uint64  threshold = informalProof.escrowToThreshold(escrowId);
@@ -189,7 +188,7 @@ contract InformalProofGate is IConditionResolver {
 
 ---
 
-## Tech Stack
+## Technology Stack
 
 | Layer | Technology | Purpose |
 |---|---|---|
@@ -202,7 +201,7 @@ contract InformalProofGate is IConditionResolver {
 | Frontend | React + `@cofhe/react` | Worker + lender UI |
 | Accounts | ZeroDev (Wave 2) | Social login, sponsored gas |
 | Testing | Hardhat + `@cofhe/hardhat-plugin` | Mock FHE locally |
-| Network | Arbitrum Sepolia → public mainnet → Fhenix mainnet autumn 2026 | Phased deployment |
+| Network | Arbitrum Sepolia -> public mainnet -> Fhenix mainnet (autumn 2026) | Phased deployment |
 
 ---
 
@@ -218,4 +217,4 @@ contract InformalProofGate is IConditionResolver {
 
 ---
 
-*InformalProof | Fhenix CoFHE | Privara + ReinieraOS*
+*Lendi | Fhenix CoFHE | Privara + ReinieraOS*

@@ -1,7 +1,6 @@
-# TECHNOLOGIES.md
-## InformalProof × ReinieraOS — Technology Stack
+# Lendi x ReinieraOS Technology Stack
 
-> Every tool, library, protocol, and service used — with rationale and integration details.
+> Every tool, library, protocol, and service used, with rationale and integration details.
 
 ---
 
@@ -37,7 +36,7 @@ FHE.sol library       viem                  USDC / BRLA / MXNe    React + hooks
 - Gas model: FHE ops charged on host chain at medium gas tier
 - Security: Threshold decryption via MPC — key never fully reconstructed
 
-**Components used in InformalProof:**
+**Components used in Lendi:**
 
 | Component | Role |
 |---|---|
@@ -55,7 +54,7 @@ FHE.sol library       viem                  USDC / BRLA / MXNe    React + hooks
 
 **What it is:** Solidity library exposing encrypted types and FHE operations for smart contracts.
 
-**Why we use it:** Provides the core primitives (`euint64`, `ebool`, `eaddress`, `InEuint64`) and operations (`FHE.add`, `FHE.gte`, `FHE.select`, `FHE.allow`) that InformalProof is built on.
+**Why we use it:** Provides the core primitives (`euint64`, `ebool`, `eaddress`, `InEuint64`) and operations (`FHE.add`, `FHE.gte`, `FHE.select`, `FHE.allow`) that Lendi is built on.
 
 **Installation:**
 ```bash
@@ -106,7 +105,7 @@ import {FHE, euint64, InEuint64, ebool} from "@fhenixprotocol/cofhe-contracts/FH
 npm install @cofhe/sdk
 ```
 
-**Key functions used in InformalProof:**
+**Key functions used in Lendi:**
 
 ```typescript
 import {
@@ -180,7 +179,7 @@ const client = await hre.cofhe.createClientWithBatteries(signer)
 
 **What it is:** Privacy-preserving payment infrastructure and conditional settlement engine built for the Fhenix ecosystem.
 
-**Why we use it:** Provides the verified on-chain income events that InformalProof reads and encrypts. Also provides the escrow infrastructure, protection pools, and ZeroDev integration that turns InformalProof into a full lending product.
+**Why we use it:** Provides the verified on-chain income events that Lendi reads and encrypts. Also provides the escrow infrastructure, protection pools, and ZeroDev integration that turns Lendi into a full lending product.
 
 ### ReinieraOS SDK
 
@@ -189,7 +188,7 @@ const client = await hre.cofhe.createClientWithBatteries(signer)
 npm install @reineira-os/sdk
 ```
 
-**Usage in InformalProof:**
+**Usage in Lendi:**
 
 ```typescript
 import { ReinieraClient } from '@reineira-os/sdk'
@@ -207,10 +206,10 @@ client.onPaymentReceived(workerAddress, async (payment) => {
 
 ### ReinieraOS Components Used
 
-| Component | Role in InformalProof |
+| Component | Role in Lendi |
 |---|---|
 | `ConfidentialEscrow` | Loan lifecycle — holds and releases funds |
-| `IConditionResolver` | Interface that `InformalProofGate` implements |
+| `IConditionResolver` | Interface that `LendiGate` implements |
 | `ProtectionPool` | Lender coverage against defaults |
 | `judge()` | Automated encrypted default resolution |
 | `platform-modules` | iOS/Web UI (ships Wave 2) |
@@ -219,7 +218,7 @@ client.onPaymentReceived(workerAddress, async (payment) => {
 
 **Gate Plugin Pattern:**
 ```typescript
-// InformalProofGate implements IConditionResolver
+// LendiGate implements IConditionResolver
 // ReinieraOS calls it before releasing escrow funds
 interface IConditionResolver {
     function isConditionMet(bytes32 escrowId) external returns (bool);
@@ -253,7 +252,7 @@ interface IConditionResolver {
 
 **Why we use it:** Informal workers should not need to understand wallets, gas, or seed phrases. ZeroDev creates a smart account automatically on social login, handles gas sponsorship, and enables batched transactions.
 
-**What it enables for InformalProof:**
+**What it enables for Lendi:**
 - Social login (Google, email) → smart account created automatically
 - No ETH needed for gas — sponsored by the protocol
 - Session keys — workers approve income recording once, not every transaction
@@ -418,14 +417,14 @@ const config: HardhatUserConfig = {
 ## Dependency Graph
 
 ```
-InformalProof.sol
+Lendi.sol
 ├── @fhenixprotocol/cofhe-contracts (FHE.sol)
 │   └── Fhenix CoFHE coprocessor (off-chain)
 │       └── Threshold Network (MPC decryption)
 └── IConditionResolver (ReinieraOS interface)
 
-InformalProofGate.sol
-├── InformalProof.sol
+LendiGate.sol
+├── Lendi.sol
 └── @reineira-os/contracts (IConditionResolver)
     └── ConfidentialEscrow.sol (ReinieraOS)
         ├── ProtectionPool.sol (ReinieraOS)
@@ -445,4 +444,4 @@ Testing
 
 ---
 
-*InformalProof | Built on Fhenix CoFHE | Powered by Privara + ReinieraOS*
+*Lendi | Built on Fhenix CoFHE | Powered by Privara + ReinieraOS*

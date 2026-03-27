@@ -1,7 +1,6 @@
-# USERandDATAFLOW.md
-## InformalProof × ReinieraOS — User Journeys and Data Flows
+# Lendi x ReinieraOS User Journeys and Data Flows
 
-> Complete flows for every actor. What each user does, what data moves, where it goes, and what nobody ever sees.
+> Complete flows for every actor: what each user does, what data moves, where it goes, and what nobody ever sees.
 
 ---
 
@@ -9,7 +8,7 @@
 
 ```
 BORROWER          LENDER            PROTECTION POOL     AI ADVISOR      PROTOCOL
-(informal         (P2P lender       (stakers who        (WebLLM         (InformalProof
+(informal         (P2P lender       (stakers who        (WebLLM         (Lendi
  worker)           or fintech)       fund coverage)      local model)    + ReinieraOS)
 ```
 
@@ -29,7 +28,7 @@ ZeroDev creates smart account automatically
   No ETH needed for gas
   No wallet extension required
         ↓
-InformalProof.registerWorker()
+Lendi.registerWorker()
   Emits: WorkerRegistered(workerAddress)
   Stores: registeredWorkers[worker] = true
   Gas: sponsored by protocol (ERC-2771)
@@ -66,7 +65,7 @@ Historial starts building on next payment received
 ```
 Lender submits to protocol owner for whitelist
         ↓
-Owner calls InformalProof.registerLender(lenderAddress)
+Owner calls Lendi.registerLender(lenderAddress)
   Emits: LenderRegistered(lenderAddress)
   Stores: registeredLenders[lender] = true
         ↓
@@ -100,7 +99,7 @@ ENCRYPTION STEP — happens on worker's device
   → returns InEuint64 (encrypted value + ZK proof of validity)
   → plaintext 500_000000 is GONE after this step
         ↓
-Contract call: InformalProof.recordIncome(InEuint64)
+Contract call: Lendi.recordIncome(InEuint64)
         ↓
 ON-CHAIN FHE OPERATIONS:
   euint64 amount = FHE.asEuint64(encAmount)
@@ -160,7 +159,7 @@ totalIncome = sum of all transfer values
 ENCRYPTION STEP — device only
   cofheClient.encryptInputs([Encryptable.uint64(totalIncome)])
         ↓
-InformalProof.recordIncome(InEuint64)
+Lendi.recordIncome(InEuint64)
   → same FHE operations as Source A
 ```
 
@@ -229,9 +228,9 @@ Session ends / tab closes
 ```
 Worker: "Apply for $300 loan, 90 days"
         ↓
-App calls InformalProofGate.isConditionMet(escrowId)
+App calls LendiGate.isConditionMet(escrowId)
 
-  Gate calls InformalProof.proveIncome(worker, 400_000000)
+  Gate calls Lendi.proveIncome(worker, 400_000000)
   [threshold: $400/month minimum]
 
   ON-CHAIN FHE OPERATIONS:
@@ -324,7 +323,7 @@ ConfidentialEscrow stores encrypted:
         ↓
 Escrow checks 3 gate conditions simultaneously:
 
-  GATE 1 — InformalProofGate.isConditionMet(escrowId)
+  GATE 1 — LendiGate.isConditionMet(escrowId)
     → proveIncome(worker, threshold)
     → FHE.gte → ebool → true ✅
 
@@ -372,7 +371,7 @@ Escrow records payment (encrypted):
 Lender receives $105 USDC automatically
   FHE.select(paymentReceived, installmentAmount, zero)
         ↓
-InformalProof updates worker history:
+Lendi updates worker history:
   repaymentHistory[worker] = FHE.add(repaymentHistory[worker], encrypt(1))
   → Good repayment record (encrypted count, not amounts)
   → Future FHE risk score improves
@@ -480,7 +479,7 @@ Default          Updated risk score      Via protection pool     No individual d
 
 ## Event Log — What Is Public On-Chain
 
-All events emitted by InformalProof contain NO sensitive amounts:
+All events emitted by Lendi contain NO sensitive amounts:
 
 | Event | Public fields | Private fields |
 |---|---|---|
@@ -506,4 +505,4 @@ All events emitted by InformalProof contain NO sensitive amounts:
 
 ---
 
-*InformalProof | Built on Fhenix CoFHE | Powered by Privara + ReinieraOS*
+*Lendi | Built on Fhenix CoFHE | Powered by Privara + ReinieraOS*
