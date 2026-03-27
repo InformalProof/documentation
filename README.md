@@ -1,5 +1,6 @@
 # Lendi
 ### Prove what you earn. Reveal nothing.
+![Lendi logo](./images/Lendi-logo.png)
 
 ---
 
