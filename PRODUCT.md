@@ -73,15 +73,22 @@ Worker taps "Apply for loan — $200"
 → Lender never saw the income amount
 ```
 
-### Flow 4 — Lender Views Portfolio
+### Flow 4 — Lender Gets Protected Against Default
 
 ```
-Lender logs into dashboard
-→ Sees: active loans, repayment status, pool coverage
-→ Does NOT see: any worker's income, identity, or history
-→ Receives automated claim payout if default occurs
-→ ProtectionPool handles resolution via encrypted judge()
+Lender deposits liquidity to fund loans
+→ ProtectionPool.stake(amount) — lender is now insured
+→ Loan is disbursed to qualified worker
+→ If repaid: lender receives principal + interest
+→ If default: ProtectionPool.activateClaim(escrowId)
+   → FHE judge() runs encrypted default logic
+   → Lender receives automated payout from pool
+   → No manual review, no exposure of worker data
+→ Lender dashboard shows: active loans, repayment rate, pool coverage %
+→ Lender NEVER sees: worker income, identity, risk score
 ```
+
+**This is the feature no competitor has.** Kueski, Addi, and Juancho expose all borrower data to calculate risk. ConfidentialCredit has privacy but no lender protection. InformalProof is the only platform that gives lenders coverage while keeping borrower data encrypted end-to-end.
 
 ---
 
@@ -105,13 +112,20 @@ Lender logs into dashboard
 - Advice based on real income data
 - Completely private: device-only computation
 
-### 4. ReinieraOS Loan Lifecycle
+### 4. Encrypted Lender Protection (ProtectionPool)
+- **Our only feature that no competitor has**
+- Lenders deposit liquidity and are automatically insured against borrower default
+- Premium calculation uses `FHE.mul()` and `FHE.div()` on encrypted risk scores — borrower data never exposed
+- Default claims are processed via encrypted `judge()` logic — automated payout with no manual review
+- Backed by staker deposits in a shared pool — distributed risk across all loans
+- This is what makes InformalProof defensible: privacy + lender coverage in one system
+
+### 5. ReinieraOS Loan Lifecycle
 - Escrow holds funds until all conditions pass
 - Automatic repayment tracking
-- Default resolution via encrypted `judge()` — no manual process
-- ProtectionPool covers lenders — backed by staker deposits
+- Integration with ProtectionPool for default resolution
 
-### 5. ZeroDev Account Abstraction
+### 6. ZeroDev Account Abstraction
 - Workers onboard with social login
 - No wallet, no seed phrase, no gas management
 - Smart account created automatically
@@ -120,16 +134,25 @@ Lender logs into dashboard
 
 ## What Makes It Different
 
-### The one thing no competitor does
+### The one thing no competitor does: Lender protection without exposing borrower data
 
-Every micro-lending company in LATAM — Kueski, Addi, Juancho te Presta — requires the borrower to share their financial data. The platform stores it, processes it, and is liable for it.
+According to our competitor analysis, **lender protection is our only unique feature**. Every other platform — Kueski, Addi, Juancho te Presta, even ConfidentialCredit — either has no lender protection at all, or requires full visibility into borrower finances to calculate risk.
 
 InformalProof is the only system where:
-- The lender never touches the borrower's income data
-- The platform has no server storing sensitive information
-- The borrower's data is mathematically protected — not just policy-protected
+- **Lenders are insured against default via an encrypted ProtectionPool**
+- **Risk premiums are calculated using FHE** — no individual borrower data is ever decrypted
+- **Claims are paid automatically** when defaults occur — using encrypted `judge()` logic
+- **The borrower's income and risk score remain encrypted end-to-end**
 
-This is not a UX advantage. It is a structural privacy guarantee enforced by cryptography. As LGPD in Brazil and Habeas Data laws in Colombia become stricter, this becomes a compliance advantage for the fintechs that integrate us.
+This is our moat. Privacy alone is not enough — Bloom and ConfidentialCredit have privacy. Serving informal workers is not enough — Addi and Kueski already do that. But nobody else gives lenders coverage without requiring full financial transparency from the borrower.
+
+### Why this matters for go-to-market
+
+Fintechs care about two things: risk and compliance. InformalProof reduces both:
+- **Risk:** ProtectionPool coverage means the fintech is insured even if the borrower defaults
+- **Compliance:** Because we never hold plaintext income data, the fintech has no data liability under LGPD or Habeas Data laws
+
+This is not a UX advantage. It is a structural privacy and risk guarantee enforced by cryptography. As regulations tighten, this becomes a hard-to-replicate integration advantage.
 
 ### Why FHE specifically
 

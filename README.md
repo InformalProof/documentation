@@ -5,7 +5,7 @@
 
 ## What We Do
 
-InformalProof lets informal workers prove their income to lenders using Fully Homomorphic Encryption — without revealing the actual number. The lender receives a yes/no answer. The worker keeps full privacy.
+InformalProof lets informal workers prove their income to lenders using Fully Homomorphic Encryption — without revealing the actual number. The lender receives a yes/no answer. The worker keeps full privacy. Every loan is insured via an encrypted protection pool — the only system in LATAM that protects lenders without exposing borrower data.
 
 ---
 
@@ -30,7 +30,10 @@ Workers register income from on-chain stablecoin transfers (Privara / direct USD
 **2. Privacy-preserving credit proof**
 When a lender requests verification, the contract runs `FHE.gte(workerIncome, threshold)` on two ciphertexts. Neither value is decrypted. The lender receives only an `ebool`: qualifies or not.
 
-**3. Local AI financial advisor**
+**3. Lender protection via encrypted risk pool**
+Every loan is automatically backed by a ProtectionPool that insures lenders against default — using FHE to calculate premiums and payouts without exposing individual worker risk scores. This is our only feature that no competitor has. Lenders get coverage. Workers get privacy. The pool operates entirely on encrypted data.
+
+**4. Local AI financial advisor**
 Workers can chat with an AI advisor that sees their decrypted income — but only in their device's RAM, via WebLLM. No server is ever called. Not ours, not OpenAI's.
 
 ---
@@ -70,7 +73,9 @@ The $2M SOM assumes: one fintech integration (Nequi or Rappi), average loan of $
 | **Bloom Credit** | ❌ | Partial | ❌ | ❌ |
 | **ConfidentialCredit (Fhenix)** | ✅ FHE | ✅ | ✅ | ❌ |
 
-**Honest note:** Kueski, Addi, and Juancho te Presta already serve informal workers. They have distribution, trust, and a working product. Our advantage is not that we serve informal workers — it's that we do it without holding their data. That is a regulatory and trust advantage, not a user experience one. We are not faster or simpler than Addi. We are more defensible.
+**Honest note:** Kueski, Addi, and Juancho te Presta already serve informal workers. They have distribution, trust, and a working product. Our advantage is not that we serve informal workers — it's that we do it without holding their data **and we protect lenders without exposing borrowers**.
+
+**Lender protection is our moat.** No competitor — traditional or crypto-native — offers insurance against default while keeping borrower income encrypted. This is a regulatory advantage (no data liability), a trust advantage (lenders get coverage), and a technical advantage (only possible with FHE). We are not faster or simpler than Addi. We are more defensible.
 
 ---
 
