@@ -4,13 +4,26 @@
 
 ---
 
-## The Five Actors
+## The Five Actors (Prioritized by Go-to-Market)
 
 ```
-BORROWER          LENDER            PROTECTION POOL     AI ADVISOR      PROTOCOL
-(informal         (P2P lender       (stakers who        (WebLLM         (Lendi
- worker)           or fintech)       fund coverage)      local model)    + ReinieraOS)
+PRIMARY USERS (Waves 1-4):
+BORROWER          SMALL LENDER         PROTECTION POOL     AI ADVISOR      PROTOCOL
+(informal         (community credit    (stakers who        (WebLLM         (Lendi
+ worker)           circle, P2P          fund coverage)      local model)    + ReinieraOS)
+                   individual)
+
+FUTURE USERS (Wave 5+, once traction is proven):
+                  LARGE FINTECH
+                  (Nequi, Rappi,
+                   neobanks)
 ```
+
+**Why this order matters:**
+- Small lenders validate PMF in days, not months
+- Individual users scale faster than enterprise contracts
+- Large fintech deals require warm intros — easier once we have traction
+- Build momentum with segments that move fast, then large players come to us
 
 ---
 
@@ -60,21 +73,31 @@ Historial starts building on next payment received
 
 ---
 
-### Lender Onboarding
+### Lender Onboarding (Small Lenders — Self-Service)
 
 ```
-Lender submits to protocol owner for whitelist
+Small lender (community credit circle or P2P individual) opens web app
+        ↓
+Social login (Google / email via ZeroDev)
+        ↓
+Self-service registration:
+  Lender submits application (name, region, expected loan volume)
+  Auto-approved for small loan limits (e.g., max $5K total exposure)
         ↓
 Owner calls Lendi.registerLender(lenderAddress)
   Emits: LenderRegistered(lenderAddress)
   Stores: registeredLenders[lender] = true
         ↓
 Lender deposits USDC to ProtectionPool
+  Small amount OK (as low as $500 to start)
   Liquidity available for loans
   Earns premiums from covered loans
         ↓
 Lender accesses loan marketplace
+  Can fund individual loans or set auto-approval criteria
 ```
+
+**Note:** Large fintech lenders (Wave 5+) go through manual KYC and higher deposit requirements. Small lenders get fast self-service onboarding to validate PMF quickly.
 
 ---
 

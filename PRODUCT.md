@@ -16,20 +16,33 @@
 
 ---
 
-### Persona 2 - The Lender
+### Persona 2 - The Small Lender (Primary Go-to-Market)
 
-**Name:** Fintech credit team at a neobank
-**Problem:** They want to expand credit to informal workers but have no reliable income signal. They also have data liability concerns — storing worker financial data creates LGPD / Habeas Data compliance risk.
-**What they want:** A verified income signal that tells them "qualifies" or "doesn't qualify" — without holding the underlying data.
-**What they don't want:** To be responsible for a database of worker income that can be hacked or subpoenaed.
+**Name:** María, runs a community credit circle in Medellín
+**Problem:** Lends to 20-30 informal workers in her neighborhood. Knows them personally but has no way to verify their income. When someone defaults, she has no recourse.
+**What she wants:** A simple way to verify borrowers can repay without needing their bank statements. Protection when loans go bad.
+**What she doesn't want:** Complex fintech infrastructure. Legal liability for holding financial data.
+**Why she's our starting point:** Fast to onboard, validates PMF in days not months, builds social proof before approaching big tech.
 
 ---
 
-### Persona 3 - The Integration Partner (Fintech)
+### Persona 3 - The Individual P2P Lender
+
+**Name:** Independent lender providing microloans via crypto
+**Problem:** Wants to lend to informal workers but has no credit scoring system. High default risk.
+**What they want:** Income verification without KYC overhead. Automated default protection.
+**What they don't want:** To manually chase down borrowers when payments are missed.
+**Why they matter:** Volume can scale quickly if UX is good. These users become our advocates when we approach larger partners later.
+
+---
+
+### Persona 4 - The Large Fintech Integration Partner (Future, Not Wave 1-3)
 
 **Name:** Product lead at Nequi Colombia
 **Problem:** Has 19M users, most informal. Wants to offer credit without building FHE infrastructure.
-**What they want:** An SDK that integrates in days, not months. A widget that works inside their app.
+**What they want:** Proven traction with real users before integration. An SDK that works.
+**What they don't want:** To be a guinea pig for an unvalidated product.
+**Why we wait:** Large tech sales take months without warm intros. We build momentum with smaller segments first, then they come to us.
 
 ---
 
@@ -147,11 +160,18 @@ This is our moat. Privacy alone is not enough — Bloom and ConfidentialCredit h
 
 ### Why this matters for go-to-market
 
-Fintechs care about two things: risk and compliance. Lendi reduces both:
+**Starting with small lenders and individual users (Waves 1-4):**
+- **Faster validation:** Days to first loan, not months to first enterprise contract
+- **Lower friction:** Self-service onboarding, no warm intros needed
+- **Real traction data:** When we approach Nequi or Rappi later, we show them "5,000 loans in 90 days" not a pitch deck
+- **Community-driven growth:** Small lenders tell other small lenders. Virality beats cold outreach.
+
+**Moving to large fintech later (Wave 5+):**
+Once we have proven user demand, large fintechs care about two things: risk and compliance. Lendi reduces both:
 - **Risk:** ProtectionPool coverage means the fintech is insured even if the borrower defaults
 - **Compliance:** Because we never hold plaintext income data, the fintech has no data liability under LGPD or Habeas Data laws
 
-This is not a UX advantage. It is a structural privacy and risk guarantee enforced by cryptography. As regulations tighten, this becomes a hard-to-replicate integration advantage.
+This is not a UX advantage. It is a structural privacy and risk guarantee enforced by cryptography. As regulations tighten, this becomes a hard-to-replicate integration advantage. But we prove it with small users first.
 
 ### Why FHE specifically
 

@@ -140,14 +140,20 @@ Colombia first. Nequi integration target by Q3."
 
 ---
 
-## WAVE 3 (Marathon) — Protocol
+## WAVE 3 (Marathon) — Direct-to-Consumer Validation
 ### Apr 8 – May 8 | Evaluation May 8–11 | $12,000 USDC
 
-**Goal:** Make it integrable. First real fintech contact.
+**Goal:** Validate PMF with individual users and small microlending orgs. Avoid large tech partnerships until we have proven traction.
 
 ### What gets built
 
-**`@informalproof/sdk` — npm package**
+**Direct user acquisition**
+- Public web app for individual workers (no fintech integration required)
+- Self-service onboarding flow for borrowers
+- Small microlending orgs can sign up directly via web interface
+- Target: 50-100 real individual users testing the product
+
+**`@informalproof/sdk` — npm package (optional integration)**
 ```typescript
 import { LendiClient } from '@lendi/sdk'
 
@@ -155,6 +161,7 @@ const client = new LendiClient({ network: 'arbitrum' })
 await client.recordIncome({ amount: 500_000000n })
 const result = await client.proveIncome({ worker, threshold: 400_000000n })
 ```
+*Note: SDK available but not required for Wave 3 success. Focus is on direct consumer adoption.*
 
 **Compliance layer**
 - AML threshold check: `FHE.lte(monthlyIncome, amlLimit)` → `ebool` for regulator
@@ -164,35 +171,45 @@ const result = await client.proveIncome({ worker, threshold: 400_000000n })
 - `judge()` integration — default resolution without manual process
 - Open economy: other protocols can buy coverage from our pools
 
-**Colombia pilot outreach**
-- Nequi developer program application
-- Rappi Colombia developer contact
-- Clear integration guide in Spanish
+**Small lender outreach (NOT large tech)**
+- Community-based microlending organizations in Colombia
+- Individual P2P lenders willing to test the platform
+- Spanish-language onboarding materials for small orgs
+- Clear integration guide focused on non-technical users
 
 **Public mainnet preparation**
 - Deploy to Arbitrum One (mainnet) — without FHE in production
-- Validate loan flow with real USDC
+- Validate loan flow with real USDC from individual users
 - Collect real user feedback before Fhenix mainnet
+- Build momentum with smaller segments before approaching large fintech
 
 ---
 
-## WAVE 4 — Validation
+## WAVE 4 — Real User Validation
 ### May 11–20 | Evaluation May 20–23 | $14,000 USDC
 
-**Goal:** Real users. Real loans. Colombia only.
+**Goal:** Real users. Real loans. Start small, validate fast.
 
 ### What gets built
 
 **First real loans on public mainnet**
-- Small loans only: max $100 per borrower in pilot
-- Target: 100 loans via one fintech partner (Nequi or Rappi Colombia)
+- Small loans only: max $100-200 per borrower in pilot
+- Target: 50+ loans from individual users or small microlending orgs
+- If traction is strong, explore one small fintech integration (community credit union, not Nequi/Rappi yet)
 - Real repayment tracking
 - Real ProtectionPool covering actual defaults
+
+**Key metric:** Days to first 50 loans, not months to first enterprise deal
 
 **Security**
 - Audit of `Lendi.sol` and `LendiGate.sol`
 - Multi-sig ownership on all contracts
 - Gas optimization report — Arbitrum mainnet differs from testnet
+
+**Growth strategy**
+- Once user traction is validated (50+ successful loans), THEN approach larger fintech partners
+- Use real user data and success metrics as leverage for warm intros
+- Large tech integrations (Nequi, Rappi) become inbound opportunities, not cold outreach
 
 **Fhenix mainnet preparation**
 - Monitor Fhenix mainnet timeline (scheduled autumn 2026)

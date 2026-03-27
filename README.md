@@ -57,9 +57,15 @@ FHE on EVM became production-ready in 2025. Fhenix CoFHE is live on Arbitrum Sep
 |---|---|---|
 | **TAM** | $12B | P2P + microlending market in LATAM (2025) |
 | **SAM** | $800M | Colombia + Mexico informal worker lending |
-| **SOM (Year 1)** | $2M | 5,000 loans via one fintech partner in Colombia |
+| **SOM (Year 1)** | $2M | 5,000 loans, average $400/loan |
 
-The $2M SOM assumes: one fintech integration (Nequi or Rappi), average loan of $400, 5,000 loans in year one. This is the realistic starting point — not a region-wide figure.
+**Realistic starting point:** The $2M SOM assumes 5,000 loans in year one at $400 average loan size.
+
+**Go-to-market approach:**
+- **Waves 1-4:** Start with individual users and small microlending organizations (community credit circles, P2P lenders)
+- **Why small first:** Validates PMF in days/weeks, not months. Avoids long enterprise sales cycles without warm intros.
+- **Wave 5+:** Once we have proven traction (50-100+ successful loans), approach larger fintech partners (Nequi, Rappi) with real usage data as leverage
+- **Key insight:** Large tech tends to come to you once you build momentum with smaller segments that scale fast
 
 ---
 
@@ -85,10 +91,12 @@ The $2M SOM assumes: one fintech integration (Nequi or Rappi), average loan of $
 | Quarter | Focus | Target |
 |---|---|---|
 | **Q2 2026** | Ship core FHE contracts + demo | Arbitrum Sepolia deployment |
-| **Q2 2026** | AI advisor + Privara integration | First 100 test users (Colombia) |
-| **Q3 2026** | Public testnet validation | One fintech pilot (Nequi or Rappi Colombia) |
-| **Q3 2026** | Plug in Fhenix privacy layer | Protocol-level privacy on public chain |
+| **Q2 2026** | AI advisor + Privara integration | First 50-100 individual users (Colombia) |
+| **Q3 2026** | Direct-to-consumer validation | Small microlending orgs + P2P lenders |
+| **Q3 2026** | Prove traction, then approach large tech | If momentum is strong, explore fintech partnerships |
 | **Q4 2026** | Mainnet (Fhenix, scheduled autumn 2026) | First 1,000 loans |
+
+**Strategy:** Start small and fast. Individual users and community lenders validate PMF in days, not months. Once we have real traction and usage data, larger fintech partners (Nequi, Rappi) become warm intros instead of cold outreach.
 
 **Note:** Fhenix mainnet is not available until autumn 2026. We start on a public chain to validate product-market fit, then plug in privacy at the protocol level with Fhenix support.
 
