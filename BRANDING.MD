@@ -34,17 +34,21 @@ For these users, **credit has always been a closed door**.
 
 ## The Core Idea
 
-Lendi is built on one simple principle:
+Lendi is built on one principle that solves for both sides:
 
-> People should be able to prove they qualify, without exposing their financial data.
+> Replace trust with protocol. Deliver guarantees to borrowers and lenders simultaneously.
 
-Through encrypted verification (FHE), users can:
+**For borrowers:**
+- Prove eligibility without exposing financial data
+- Access credit without surveillance
 
-- prove eligibility
-- preserve privacy
-- access opportunity
+**For lenders:**
+- Deploy capital with automated default protection
+- Underwrite risk without holding sensitive data
 
-This is not just lending. This is **access infrastructure**.
+Through encrypted verification (FHE), neither side has to trust the other. Both trust the math.
+
+This is not just lending. This is **two-sided trust infrastructure**.
 
 ---
 
@@ -90,13 +94,13 @@ It should sound like:
 
 Lendi stands on three pillars.
 
-### Access
+### Two-sided guarantees
 
-We are not just a loan interface. We are a gateway to opportunity.
+Most lending products solve for one side. We eliminate the trade-off entirely. Borrowers transact without exposure. Lenders deploy with protection.
 
-### Trust
+### Trust by protocol
 
-We do not ask users to expose sensitive financial data. Trust is built into the protocol.
+Neither side trusts the other. Both trust the math. The answer is programmable, identical for every borrower, every time.
 
 ### Simplicity
 
@@ -206,18 +210,26 @@ Lendi should avoid:
 
 ## Core Brand Message
 
-### Primary Line
+### Primary Line (Borrower-facing)
 
-> **Lendi opens the door to credit for people who have always been left out.**
+> **Prove what you earn. Reveal nothing.**
+
+### Primary Line (Lender-facing)
+
+> **Deploy capital. Risk nothing unprotected.**
+
+### Unified Positioning
+
+> **Lendi replaces trust with protocol — delivering strict guarantees to both borrowers and lenders simultaneously.**
 
 ### Expanded Version
 
-> For millions of people, credit has always been a closed door.  
-> Lendi changes that.
+> Traditional lending forces a choice: borrowers expose everything, or lenders deploy unprotected.
+> Lendi eliminates that trade-off.
 
 ### Technical Line (judges and partners)
 
-> Private financial eligibility powered by encrypted computation.
+> Two-sided trust infrastructure powered by fully homomorphic encryption. Neither side trusts the other — both trust the protocol.
 
 ---
 

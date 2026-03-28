@@ -1,12 +1,30 @@
 # Lendi
-### Prove what you earn. Reveal nothing.
+### For Borrowers: Prove what you earn. Reveal nothing.
+### For Lenders: Deploy capital. Risk nothing unprotected.
 
 ![Lendi logo](./images/Lendi-logo.png)
 ---
 
 ## What We Do
 
-Lendi lets informal workers prove their income to lenders using Fully Homomorphic Encryption — without revealing the actual number. The lender receives a yes/no answer. The worker keeps full privacy. Every loan is insured via an encrypted protection pool — the only system in LATAM that protects lenders without exposing borrower data.
+Lendi replaces institutional judgment with programmable guarantees. Borrowers prove eligibility without exposing financial data. Lenders deploy capital with automated default protection. Neither side trusts the other — both trust the protocol.
+
+**How it works:** Informal workers prove their income using Fully Homomorphic Encryption. The lender receives a yes/no answer — the worker reveals nothing. Every loan is automatically insured via an encrypted protection pool. Lendi is the only system in LATAM that delivers strict guarantees to both borrowers and lenders simultaneously.
+
+---
+
+## Why Lendi Exists
+
+Traditional lending forces a choice: either borrowers expose everything, or lenders deploy capital unprotected. Lendi eliminates that trade-off.
+
+**The guarantee to borrowers:**
+Prove eligibility without revealing your income, clients, or transaction history. The lender receives only a yes/no answer — computed on encrypted data, never decrypted.
+
+**The guarantee to lenders:**
+Deploy capital with automated insurance against default. Every loan is backed by an encrypted protection pool. Risk assessment happens on ciphertexts — borrower privacy is never compromised.
+
+**The architecture:**
+Neither side trusts the other. Both trust the protocol. The answer comes from math, and it's identical for every borrower, every time.
 
 ---
 
@@ -15,8 +33,8 @@ Lendi lets informal workers prove their income to lenders using Fully Homomorphi
 **1. Exclusion by design**
 47 million workers in LATAM earn real income in stablecoins but have no payslip. Traditional lenders and P2P platforms require full financial exposure to underwrite them. Most workers refuse. They stay excluded.
 
-**2. Privacy is the blocker — not the technology**
-On-chain income data exists and is verifiable. The problem is that sharing it means revealing everything: clients, amounts, sources. No existing solution separates "proof of income" from "exposure of income."
+**2. The trust trade-off problem**
+Traditional lending forces one side to absorb all the risk: borrowers expose everything, or lenders deploy capital unprotected. On-chain income data exists and is verifiable, but sharing it means revealing everything. No existing solution delivers guarantees to both sides simultaneously.
 
 **3. The informal economy is going on-chain**
 Stablecoin adoption in LATAM grew 63% YoY. Workers are already paid in USDC. The data is there. The privacy layer is not.
@@ -31,8 +49,8 @@ Workers register income from on-chain stablecoin transfers (Privara / direct USD
 **2. Privacy-preserving credit proof**
 When a lender requests verification, the contract runs `FHE.gte(workerIncome, threshold)` on two ciphertexts. Neither value is decrypted. The lender receives only an `ebool`: qualifies or not.
 
-**3. Lender protection via encrypted risk pool**
-Every loan is automatically backed by a ProtectionPool that insures lenders against default — using FHE to calculate premiums and payouts without exposing individual worker risk scores. This is our only feature that no competitor has. Lenders get coverage. Workers get privacy. The pool operates entirely on encrypted data.
+**3. Two-sided trust infrastructure via encrypted risk pool**
+Every loan is automatically backed by a ProtectionPool that insures lenders against default — using FHE to calculate premiums and payouts without exposing individual worker risk scores. This delivers the core guarantee: lenders deploy capital with protection, borrowers transact without exposure. Neither side has to trust the other — both trust the protocol. No competitor offers this symmetry.
 
 **4. Local AI financial advisor**
 Workers can chat with an AI advisor that sees their decrypted income — but only in their device's RAM, via WebLLM. No server is ever called. Not ours, not OpenAI's.
@@ -80,9 +98,9 @@ FHE on EVM became production-ready in 2025. Fhenix CoFHE is live on Arbitrum Sep
 | **Bloom Credit** | ❌ | Partial | ❌ | ❌ |
 | **ConfidentialCredit (Fhenix)** | ✅ FHE | ✅ | ✅ | ❌ |
 
-**Honest note:** Kueski, Addi, and Juancho te Presta already serve informal workers. They have distribution, trust, and a working product. Our advantage is not that we serve informal workers — it's that we do it without holding their data **and we protect lenders without exposing borrowers**.
+**Honest note:** Kueski, Addi, and Juancho te Presta already serve informal workers. They have distribution, trust, and a working product. Our advantage is not that we serve informal workers — it's that we've eliminated the trust trade-off entirely.
 
-**Lender protection is our moat.** No competitor — traditional or crypto-native — offers insurance against default while keeping borrower income encrypted. This is a regulatory advantage (no data liability), a trust advantage (lenders get coverage), and a technical advantage (only possible with FHE). We are not faster or simpler than Addi. We are more defensible.
+**Two-sided trust infrastructure is our moat.** Most lending products solve for one side and ask the other to accept the trade-off. We deliver strict guarantees to both simultaneously. No competitor — traditional or crypto-native — offers insurance against default while keeping borrower income encrypted. This is a regulatory advantage (no data liability), a capital efficiency advantage (lenders deploy with protection), and a technical advantage (only possible with FHE). We are not faster or simpler than Addi. We are more defensible.
 
 ---
 
